@@ -49,7 +49,7 @@
     <menuitem name="Project"
               id="project_tracker"
               action="project_action"
-              parent="task_tracker"
+              parent="stage_tracker"
               sequence="10"/>
 
 </odoo>

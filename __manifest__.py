@@ -11,6 +11,7 @@
     'depends': ['base', 'hr'],
     'data': [
         'data/default_stages.xml',
+        'view/stage_view.xml',
         'view/task_view.xml',
         'view/hr_employee_view.xml',
         'view/project_view.xml',

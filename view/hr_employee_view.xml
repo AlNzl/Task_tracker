@@ -36,6 +36,6 @@
     <menuitem name="Employees"
               id="hr_employee"
               action="hr_employee_action"
-              parent="task_tracker"
+              parent="stage_tracker"
               sequence="10"/>
 </odoo>

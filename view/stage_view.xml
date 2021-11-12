@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="stage_view_form" model="ir.ui.view">
+        <field name="name">stage.view.form</field>
+        <field name="model">stage</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="task_ids"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="stage_view_tree" model="ir.ui.view">
+        <field name="name">stage.view.tree</field>
+        <field name="model">stage</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="task_ids"/>
+            </tree>
+        </field>
+    </record>
+    <record id="stage_action" model="ir.actions.act_window">
+        <field name="name">Stage</field>
+        <field name="res_model">stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem name="Task Tracker"
+              id="stage_tracker"
+              action="stage_action"
+              sequence="10"/>
+</odoo>
