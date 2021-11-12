@@ -3,6 +3,7 @@
     <data noupdate="1">
         <record id="stage_default" model="stage">
             <field name="name">Back Log</field>
+            <field name="name">Ready</field>
         </record>
     </data>
 </odoo>
