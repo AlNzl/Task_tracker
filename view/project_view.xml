@@ -13,7 +13,7 @@
                     <field name="currency_id"/>
                     <field name="total_price"/>
                     <field name="time" widget="float_time"/>
-                    <field name="project_line">
+                    <field name="project_line_ids">
                         <tree editable="bottom">
                             <field name="employee_id"/>
                             <field name="sold"/>

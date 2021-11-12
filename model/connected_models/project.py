@@ -15,7 +15,7 @@ class Project(models.Model):
     project_manager = fields.Many2one(comodel_name="hr.employee", string="Project manager")
     #price_for_hour = fields.Float(string="Price for hour")  # TODO make compute field
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
-    project_line = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
+    project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
 
 class ProjectLine(models.Model):
     _name = "project.line"
