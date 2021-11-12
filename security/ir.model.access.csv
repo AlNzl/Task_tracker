@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_task,task,model_task,base.group_user,1,1,1,1
+task_tracker.access_project,access_project,task_tracker.model_project,base.group_user,1,1,1,1
+task_tracker.access_stage,access_stage,task_tracker.model_stage,base.group_user,1,1,1,1
+task_tracker.access_time_tracker,access_time_tracker,task_tracker.model_time_tracker,base.group_user,1,1,1,1
+access_hr_employee,hr.employee,model_hr_employee,base.group_user,1,1,1,1
+
