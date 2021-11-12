@@ -7,7 +7,7 @@ class Project(models.Model):
 
     name = fields.Char(string="Project name")
     description = fields.Text(string="Description")
-    currency_id = fields.Many2one("res.currency", string="currency")
+    currency_id = fields.Many2one(comodel_name="res.currency", string="currency")
     total_price = fields.Monetary(string="Total Price")
     time = fields.Float(string="General time")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Workers")
