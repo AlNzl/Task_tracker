@@ -3,9 +3,9 @@ from odoo import models, fields, api
 
 class TimeTracker(models.Model):
     _name = "time.tracker"
-    _description = "TimeTracker"
+    _description = "Time Tracker"
 
-    total_time = fields.Date(string='Total task time')
+    total_time = fields.Float(string='Total task time')
     description = fields.Text(string="Description")
     data = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
