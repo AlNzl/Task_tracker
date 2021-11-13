@@ -41,7 +41,8 @@
         <field name="name">task.view.kanban</field>
         <field name="model">task</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban default_group_by="stage_id">
+                <field name="stage_id" options="{&quot;group_by_tooltip&quot;: {&quot;description&quot;: &quot;Description&quot;}}"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -77,3 +78,4 @@
               sequence="1"/>
 
 </odoo>
+
