@@ -1,5 +1,10 @@
 from odoo import models, fields, api
 
+AVAILABLE_PRIORITIES = [
+    ('0', 'Low'),
+    ('1', 'Important'),
+]
+
 
 class Task(models.Model):
     _name = "task"
@@ -7,7 +12,7 @@ class Task(models.Model):
 
     name = fields.Char(string="Task")
     description = fields.Text(string="Description")
-    priority = fields.Selection(selection=[('a', '1'), ('b', '2'), ('c', '3'), ('d', '4'), ('e', '5')])
+    priority = fields.Selection(AVAILABLE_PRIORITIES, select=True)
     total_time = fields.Float(string="Total time")
 
     stage_id = fields.Many2one(comodel_name="stage", string="Stage")
