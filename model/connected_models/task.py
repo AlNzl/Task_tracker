@@ -17,7 +17,7 @@ class Task(models.Model):
     time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker")
 
     def create_time_tracker(self):
-        if self.env['task'].search([('total_time', '=', self.total_time)]):
+        if self.env['task'].search([('time_ids', '=', self.time_ids)]):
             self.name = 'The task already exists '
         else:
             info = {
