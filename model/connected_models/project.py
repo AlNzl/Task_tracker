@@ -22,6 +22,23 @@ class Project(models.Model):
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager")
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
+    task_count = fields.Integer(string="Number of task", compute="compute_count")
+
+    def compute_count(self):
+        self.task_count=1
+
+
+    def action_open_tasks(self):
+        print("Hello")
+        # context = {
+        #     "type": "ir.actions.act_window",
+        #     "name": "Tasks",
+        #     "res.model": "task",
+        #     # "domain":[()]
+        #     "view_mode": "tree",
+        #     "target": "current"
+        # }
+        # return context
 
 
 class ProjectLine(models.Model):
