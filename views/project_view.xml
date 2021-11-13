@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+
+    <record id="action_open_tasks" model="ir.actions.act_window">
+        <field name="name">Task</field>
+        <field name="res_model">task</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            </p>
+        </field>
+    </record>
+
+
     <record id="project_view_form" model="ir.ui.view">
         <field name="name">project.view.form</field>
         <field name="model">project</field>
@@ -7,7 +20,8 @@
             <form string="Project">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_tasks" type="object" class="oe_stat_button" icon="fa-windows">
+                        <button name="%(Task_tracker.action_open_tasks)d" type="action" class="oe_stat_button"
+                                icon="fa-windows">
                             <div class="o_stat_info">
                                 <field string="Tasks" name="task_count" class="o_stat_value" widget="statinfo"/>
                             </div>
