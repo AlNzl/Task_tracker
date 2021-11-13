@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="stage_default" model="stage">
+        <record id="task_stage_backlog" model="stage">
             <field name="name">Back Log</field>
+        </record>
+
+        <record id="task_stage_ready" model="stage">
+            <field name="name">Ready for develop</field>
+        </record>
+
+        <record id="task_stage_progress" model="stage">
+            <field name="name">In progress</field>
+        </record>
+
+        <record id="task_stage_review" model="stage">
+            <field name="name">Review</field>
+        </record>
+
+        <record id="task_stage_test" model="stage">
+            <field name="name">Test</field>
+        </record>
+
+        <record id="task_stage_done" model="stage">
+            <field name="name">Done</field>
         </record>
     </data>
 </odoo>
