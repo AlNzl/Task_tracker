@@ -32,10 +32,15 @@
         </field>
     </record>
 
-        <menuitem name="Employee"
+    <menuitem name="Employee"
+              id="hr_employee_root"
+              parent="task_tracker"
+              sequence="10"/>
+
+    <menuitem name="Employee"
               id="hr_employee"
               action="hr_employee_action"
-              parent="task_tracker"
+              parent="hr_employee_root"
               sequence="3"/>
 
 </odoo>
