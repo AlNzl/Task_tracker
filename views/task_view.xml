@@ -64,9 +64,4 @@
         </field>
     </record>
 
-
-    <menuitem name="Task Tracker"
-              id="task_tracker"
-              action="task_action"
-              sequence="10"/>
 </odoo>
