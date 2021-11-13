@@ -50,6 +50,7 @@
                                     <li>Name:<strong><field name="name"/></strong></li>
                                     <li>Description:<field name="description"/></li>
                                     <li>Responsible person:<field name="responsible_id"/></li>
+                                    <li>Stage:<field name="stage_id"/></li>
                                     <li><field name="priority" widget="priority" class="mr-3"/></li>
                                 </ul>
                             </div>
