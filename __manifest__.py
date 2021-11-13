@@ -11,9 +11,7 @@
     'depends': ['base', 'hr'],
     'data': [
         'data/default_stages.xml',
-
         'security/ir.model.access.csv',
-
         'views/task_view.xml',
         'views/project_view.xml',
         'views/hr_employee_view.xml',
