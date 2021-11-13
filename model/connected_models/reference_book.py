@@ -7,7 +7,7 @@ class ReferenceBook(models.Model):
 
     name = fields.Char(string="Profession name", required=True)
 
-    employee_ids = fields.One2many(comodel_name="hr.employee", inverse_name="reference_book_id", string="Employees")
+    employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
 
 
 

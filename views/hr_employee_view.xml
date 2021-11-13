@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="hr_employee_view_form_inherit_form" model="ir.ui.view">
         <field name="name">hr.employee.form.inherit</field>
         <field name="model">hr.employee</field>
@@ -12,11 +13,48 @@
                         <field name="employee_hour"/>
                         <field name="currency_id"/>
                         <field name="position"/>
+                        <field name="position_ids" widget="many2many_tags"/>
                     </group>
                     <group>
                         <field name="task_ids"/>
                     </group>
                 </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.tree.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="position_ids"/>
+            </xpath>
+
+            <xpath expr="//field[@name='work_phone']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_email']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_location']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
         </field>
     </record>
