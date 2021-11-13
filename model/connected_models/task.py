@@ -15,3 +15,13 @@ class Task(models.Model):
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project")
     time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker")
+
+    def create_time_tracker(self):
+        if self.env['task'].search([('total_time', '=', self.total_time)]):
+            self.name = 'The task already exists '
+        else:
+            info = {
+                'total_time': self.total_time,
+                'task_id': self.time_ids
+            }
+            self.env['time.tracker'].create(info)
