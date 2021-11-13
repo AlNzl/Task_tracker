@@ -158,6 +158,6 @@
               id="project_tracker"
               action="project_action"
               parent="task_tracker"
-              sequence="1"/>
+              sequence="2"/>
 
 </odoo>
