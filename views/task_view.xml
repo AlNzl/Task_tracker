@@ -36,24 +36,7 @@
             </tree>
         </field>
     </record>
-    <!--    <record id="albums_singles_view_kanban" model="ir.ui.view">-->
-    <!--        <field name="name">albums.singles.view.kanban</field>-->
-    <!--        <field name="model">albums.singles</field>-->
-    <!--        <field name="arch" type="xml">-->
-    <!--            <kanban>-->
-    <!--                <templates>-->
-    <!--                    <t t-name="kanban-box">-->
-    <!--                        <div class="kanban.albums.singles">-->
-    <!--                            <field name="album_and_single"/>-->
-    <!--                            <field name="artists"/>-->
-    <!--                            <field name="groups"/>-->
-    <!--                            <field name="songs"/>-->
-    <!--                        </div>-->
-    <!--                    </t>-->
-    <!--                </templates>-->
-    <!--            </kanban>-->
-    <!--        </field>-->
-    <!--    </record>-->
+
     <record id="task_action" model="ir.actions.act_window">
         <field name="name">Task</field>
         <field name="res_model">task</field>

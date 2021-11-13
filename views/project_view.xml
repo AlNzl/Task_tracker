@@ -1,53 +1,163 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="project_view_form" model="ir.ui.view">
         <field name="name">project.view.form</field>
         <field name="model">project</field>
         <field name="arch" type="xml">
-            <form>
-                <group>
-                    <field name="name"/>
-                    <field name="team_lead"/>
-                    <field name="project_manager"/>
-                    <field name="description"/>
-                    <field name="currency_id"/>
-                    <field name="total_price"/>
-                    <field name="time" widget="float_time"/>
-                    <field name="project_line_ids">
-                        <tree editable="bottom">
-                            <field name="employee_id"/>
-                            <field name="sold"/>
-                        </tree>
-                    </field>
-                </group>
+            <form string="Project">
+                <sheet>
+                    <div>
+                        <div class="oe_right">
+                            <h3>
+                                <field name="date_of_registration"/>
+                            </h3>
+                        </div>
+                        <div class="oe_title pr-0">
+                            <h1 class="d-flex flex-row justify-content-between">
+                                <field name="priority" widget="priority" class="mr-3"/>
+                                <field name="name" class="o_task_name text-truncate" placeholder="Project name..."
+                                       default_focus="1"/>
+                            </h1>
+                        </div>
+                        <h1>
+                            <field name="description" default_focus="1" placeholder="Description...."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="team_lead_id"/>
+                            <field name="project_manager_id"/>
+                        </group>
+                        <group>
+
+                            <field name="currency_id"/>
+                            <field name="total_price"/>
+                        </group>
+                        <group>
+                            <field name="time" widget="float_time"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                            <page string="Workers">
+                                <field name="project_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="employee_id"/>
+                                        <field name="sold"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        <page string="Tasks">
+                            <field name="task_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
+
     <record id="project_view_tree" model="ir.ui.view">
         <field name="name">project.view.tree</field>
         <field name="model">project</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="priority" widget="priority" class="mr-3"/>
                 <field name="name"/>
-                <field name="team_lead"/>
-                <field name="project_manager"/>
                 <field name="description"/>
-                <field name="currency_id"/>
                 <field name="total_price"/>
+                <field name="currency_id"/>
                 <field name="time" widget="float_time"/>
-                <field name="worker_ids"/>
+                <field name="team_lead_id"/>
+                <field name="project_manager_id"/>
+                <field name="worker_ids" widget="many2many_tags"/>
+                <field name="task_ids" widget="many2many_tags"/>
+                <field name="date_of_registration"/>
             </tree>
         </field>
     </record>
 
+<record id="project_view_kanban" model="ir.ui.view">
+        <field name="name">project.view</field>
+        <field name="model">project</field>
+        <field name="arch" type="xml">
+            <kanban class="o_project">
+                <field name="name"/>
+                <field name="team_lead_id"/>
+                <field name="project_manager_id"/>
+                <field name="time" widget="float_time"/>
+                <field name="total_price"/>
+                <field name="priority" widget="priority" class="mr-3"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li>
+                                        <field name="priority" widget="priority" class="mr-3"/>
+                                        <b>Project Name:</b>
+                                        <field name="name"/>
+                                    </li>
+                                    <li>
+                                        <b>TL:</b>
+                                        <field name="team_lead_id"/>
+                                    </li>
+                                    <li>
+                                        <b>PM:</b>
+                                        <field name="project_manager_id"/>
+                                    </li>
+                                    <li>
+                                        <b>Time:</b>
+                                        <field name="time" widget="float_time"/>
+                                    </li>
+                                    <li>
+                                        <b>Price:</b>
+                                        <field name="total_price"/>
+                                        <field name="currency_id"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+        <record id="project_form_search" model="ir.ui.view">
+        <field name="name">project.search</field>
+        <field name="model">project</field>
+        <field name="arch" type="xml">
+            <search string="Project">
+                <field name="name"/>
+                <field name="team_lead_id"/>
+                <field name="project_manager_id"/>
+                <field name="task_ids"/>
+                <group expand="1" string="Group By">
+                    <filter string="Team Lead" name="group_id" context="{'group_by':'team_lead_id'}"/>
+                    <filter string="Project Manager" name="country_id" context="{'group_by':'project_manager_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
     <record id="project_action" model="ir.actions.act_window">
         <field name="name">Project</field>
         <field name="res_model">project</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,form,tree</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
+                You have no projects now!
             </p>
         </field>
     </record>
+
+
+    <menuitem name="Project"
+              id="project_tracker"
+              action="project_action"
+              parent="task_tracker"
+              sequence="1"/>
 
 </odoo>
