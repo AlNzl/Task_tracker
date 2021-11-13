@@ -14,7 +14,7 @@
                         <field name="position"/>
                     </group>
                     <group>
-                        <field name="worker_ids"/>
+                        <field name="task_ids"/>
                     </group>
                 </group>
             </xpath>
@@ -23,7 +23,7 @@
 
 
     <record id="hr_employee_action" model="ir.actions.act_window">
-        <field name="name">Hr</field>
+        <field name="name">Employee</field>
         <field name="res_model">hr.employee</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">

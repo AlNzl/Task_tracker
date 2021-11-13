@@ -16,7 +16,7 @@
         'views/project_view.xml',
         'views/hr_employee_view.xml',
         'views/time_tracker_view.xml',
-        'views/hr_department_view.xml',
+        'views/reference_book_view.xml',
 
     ],
     'demo': [
