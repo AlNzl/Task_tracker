@@ -18,8 +18,8 @@ class Project(models.Model):
     time = fields.Float(string="General time")
     priority = fields.Selection(AVAILABLE_PRIORITIES)
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Workers")
-    team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead")
-    project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager")
+    team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead", domain=[("position_ids.name", "=", "Team Lead")])
+    project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager", domain=[("position_ids.name", "=", "Project Manager")])
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
     task_count = fields.Integer(string="Number of task", compute="compute_count")
@@ -27,6 +27,20 @@ class Project(models.Model):
     def compute_count(self):
         for record in self:
             record.task_count = self.env["task"].search_count([("project_id", "=", self.id)])
+
+    @api.onchange("team_lead_id")
+    def _onchange_auto_select_team_lead(self):
+        for record in self:
+            record.worker_ids = [(4, record.team_lead_id.id)]
+
+    @api.onchange("project_manager_id")
+    def _onchange_auto_select_project_manager(self):
+        for record in self:
+            record.worker_ids = [(4, record.project_manager_id.id)]
+
+
+
+
 
 
 class ProjectLine(models.Model):

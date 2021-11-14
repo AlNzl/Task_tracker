@@ -57,6 +57,7 @@
                         </group>
                         <group>
                             <field name="time" widget="float_time"/>
+                            <field name="worker_ids" widget="many2many_tags"/>
                         </group>
                     </group>
 

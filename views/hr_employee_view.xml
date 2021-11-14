@@ -12,7 +12,6 @@
                         <field name="employee_coefficient"/>
                         <field name="employee_hour"/>
                         <field name="currency_id"/>
-                        <field name="position"/>
                         <field name="position_ids" widget="many2many_tags"/>
                     </group>
                     <group>
