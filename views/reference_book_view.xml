@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="reference_book_view_form" model="ir.ui.view">
+        <field name="name">reference.book.view.form</field>
+        <field name="model">reference.book</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="employee_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="reference_book_view_kanban" model="ir.ui.view">
+        <field name="name">reference.book.view.kanban</field>
+        <field name="model">reference.book</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban" sample="1">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li>Profession name:
+                                        <strong>
+                                            <field name="name"/>
+                                        </strong>
+                                    </li>
+                                    <li>Employees:
+                                        <field name="employee_ids" widget="many2many_tags"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="reference_book_view_action" model="ir.actions.act_window">
+        <field name="name">Reference Book</field>
+        <field name="res_model">reference.book</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="reference_book"
+              name="Reference Book"
+              action="reference_book_view_action"
+              parent="hr_employee_root"
+              sequence="10"/>
+
+</odoo>

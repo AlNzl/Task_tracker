@@ -72,7 +72,7 @@
         </field>
     </record>
 
-        <menuitem name="Task Tracker"
+    <menuitem name="Task Tracker"
               id="task_tracker"
               action="task_action"
               sequence="1"/>
