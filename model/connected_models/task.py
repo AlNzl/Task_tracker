@@ -45,7 +45,7 @@ class Task(models.Model):
         return stage_dct
 
     @api.model
-    def _change_stage(self):
+    def change_stage(self):
         """Change stage on tree view if currents stages the same"""
         stage_dct = self.create_stage_dct()
         acceptance_criteria = [len(self.stage_id) == 1,
