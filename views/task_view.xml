@@ -4,21 +4,44 @@
         <field name="name">task.view.form</field>
         <field name="model">task</field>
         <field name="arch" type="xml">
-            <form>
-                <group>
-                    <field name="name"/>
-                    <field name="description"/>
-                    <field name="stage_id"/>
-                    <field name="worker_id"/>
-                    <field name="priority"/>
-                    <field name="responsible_id"/>
-                    <field name="project_id"/>
-                    <field name="time_ids"/>
-                    <field name="total_time" widget="float_time"/>
-                </group>
+            <form string="Task">
+                <sheet>
+                    <div class="oe_title pr-0">
+                        <h1 class="d-flex flex-row justify-content-between">
+                            <field name="priority" widget="priority" class="mr-3"/>
+                        </h1>
+                        <h1 class="oe_title">
+                            <field name="name" placeholder="Task name" default_focus="1"/>
+                        </h1>
+                        <h2>
+                            <field name="description" placeholder="Description"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="total_time" widget="float_time"/>
+                            <field name="stage_id"/>
+                        </group>
+                        <group>
+                            <field name="worker_id"/>
+                            <field name="responsible_id"/>
+                        </group>
+                    </group>
+                    <div>
+                        <field name="time_ids"/>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
+
+
     <record id="task_view_tree" model="ir.ui.view">
         <field name="name">task.view.tree</field>
         <field name="model">task</field>
@@ -37,28 +60,59 @@
         </field>
     </record>
 
-    <record id="task_view_kanban" model="ir.ui.view">
+<record id="task_view_kanban" model="ir.ui.view">
         <field name="name">task.view.kanban</field>
         <field name="model">task</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="stage_id" options="{&quot;group_by_tooltip&quot;: {&quot;description&quot;: &quot;Description&quot;}}"/>
+                <field name="stage_id"
+                       options="{&quot;group_by_tooltip&quot;: {&quot;description&quot;: &quot;Description&quot;}}"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="oe_kanban_details">
                                 <ul>
-                                    <li>Name:<strong><field name="name"/></strong></li>
-                                    <li>Description:<field name="description"/></li>
-                                    <li>Responsible person:<field name="responsible_id"/></li>
-                                    <li>Stage:<field name="stage_id"/></li>
-                                    <li><field name="priority" widget="priority" class="mr-3"/></li>
+                                    <li>Name:
+                                        <strong>
+                                            <field name="name"/>
+                                        </strong>
+                                    </li>
+                                    <li>Description:
+                                        <field name="description"/>
+                                    </li>
+                                    <li>Responsible person:
+                                        <field name="responsible_id"/>
+                                    </li>
+                                    <li>Stage:
+                                        <field name="stage_id"/>
+                                    </li>
+                                    <li>
+                                        <field name="priority" widget="priority" class="mr-3"/>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+
+    <record id="task_form_search" model="ir.ui.view">
+        <field name="name">task.search</field>
+        <field name="model">task</field>
+        <field name="arch" type="xml">
+            <search string="Task">
+                <field name="name"/>
+                <field name="stage_id"/>
+                <field name="project_id"/>
+                <field name="responsible_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Project" name="group_id" context="{'group_by':'project_id'}"/>
+                    <filter string="Responsible" name="country_id" context="{'group_by':'responsible_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -78,4 +132,3 @@
               sequence="1"/>
 
 </odoo>
-
