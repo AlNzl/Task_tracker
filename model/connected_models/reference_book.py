@@ -11,7 +11,7 @@ class ReferenceBook(models.Model):
     employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
 
     @api.onchange('name')
-    def user_not_create(self):
+    def check_duplicate_name(self):
         if self.env["reference.book"].search([("name", '=', self.name)]):
             raise UserError(_(f"{self.name} already exists!!!"))
 
