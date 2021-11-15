@@ -40,15 +40,6 @@ class Project(models.Model):
         for record in self:
             record.worker_ids = [(4, record.project_manager_id.id)]
 
-    # @api.onchange("worker_ids")
-    # def _onchange_insert_workers(self):
-    #     for record in self:
-    #         # record.project_line_ids.employee_id = record.worker_ids.id
-    #         workers = record.worker_ids
-    #         for worker in workers:
-    #             record.project_line_ids.employee_id = worker.id
-    #             print(worker)
-
     def _go_to_tasks(self):
         return {"name": "Tasks",
                 "view_mode": "kanban",
