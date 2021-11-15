@@ -9,9 +9,7 @@ class Task(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def _get_default_stage_id(self):
-        """
-        Get default stage
-        """
+        """Get default stage"""
         stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         return stage_id
 
@@ -29,9 +27,7 @@ class Task(models.Model):
                                             string="Time tracker")
 
     def create_stage_dct(self):
-        """
-        Create dict with stages
-        """
+        """Create dict with stages"""
         back = self.env.ref("Task_tracker.task_stage_backlog").id
         ready = self.env.ref("Task_tracker.task_stage_ready").id
         progress = self.env.ref("Task_tracker.task_stage_progress").id
@@ -50,9 +46,7 @@ class Task(models.Model):
 
     @api.model
     def _change_stage(self):
-        """
-        Change stage on tree view if currents stages the same
-        """
+        """Change stage on tree view if currents stages the same"""
         stage_dct = self.create_stage_dct()
         if all((len(self.stage_id) == 1, self.stage_id.id in stage_dct, self.stage_id.id != self.env.ref("Task_tracker.task_stage_done").id)):
             stage_id = stage_dct[self.stage_id.id]["next"]
@@ -62,22 +56,20 @@ class Task(models.Model):
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
-        """
-        Group stage_ids default
-        """
-        stage_ids = self.env['stage'].search([])
+        """Group stage_ids default"""
+        stage_ids = self.env["stage"].search([])
         return stage_ids
 
 
 class TimeTrackerLine(models.Model):
-    _name = 'time.tracker.line'
+    _name = "time.tracker.line"
 
-    task_id = fields.Many2one(comodel_name='task', string='Time Tracker')
+    task_id = fields.Many2one(comodel_name="task", string="Time Tracker")
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
 
-    description = fields.Text(string='Description')
-    date = fields.Date(string='Date')
-    time = fields.Float(string='Time spent')
+    description = fields.Text(string="Description")
+    date = fields.Date(string="Date")
+    time = fields.Float(string="Time spent")
 
 
 
