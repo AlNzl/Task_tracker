@@ -35,6 +35,6 @@ class TimeTrackerLine(models.Model):
     task_id = fields.Many2one(comodel_name='task', string='Time Tracker')
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
 
-    description = fields.Text()
-    date = fields.Date()
-    time = fields.Float()
+    description = fields.Text(string='Description')
+    date = fields.Date(string='Date')
+    time = fields.Float(string='Time spent')
