@@ -1,8 +1,9 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Low'),
-    ('1', 'Important'),
+    ('Low', 'Low'),
+    ('Important', 'Important'),
 ]
 
 
@@ -17,14 +18,27 @@ class Task(models.Model):
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
-    priority = fields.Selection(AVAILABLE_PRIORITIES)
+    priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     total_time = fields.Float(string="Total time")
 
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
-                               track_visibility="onchange")
-
+                               track_visibility="onchange", group_expand='_read_group_stage_ids')
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
-    time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker",
-                               track_visibility="onchange")
+    time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker")
+
+    @api.model
+    def change_stage_tree_view(self):
+        if len(self.stage_id) == 1 and self.stage_id.id < self.env.ref("Task_tracker.task_stage_done").id:
+            stage_id = self.stage_id.id + 1
+            self.env["task"].browse(self._context.get("active_ids")).update({"stage_id": stage_id})
+        else:
+            raise UserError("The stage can't be changed.")
+
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        stage_ids = self.env['stage'].search([])
+        return stage_ids
+
+

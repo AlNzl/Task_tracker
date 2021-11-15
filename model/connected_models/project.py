@@ -1,8 +1,8 @@
 from odoo import models, fields, api
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Low'),
-    ('1', 'Important'),
+    ('Low', 'Low'),
+    ('Important', 'Important'),
 ]
 
 
@@ -13,10 +13,10 @@ class Project(models.Model):
     name = fields.Char(string="Project name", required="True")
     description = fields.Text(string="Description")
     date_of_registration = fields.Datetime(string="Date", default=lambda self: fields.datetime.now())
-    currency_id = fields.Many2one(comodel_name="res.currency", string="currency")
+    currency_id = fields.Many2one(comodel_name="res.currency", string="Currency")
     total_price = fields.Monetary(string="Total Price")
     time = fields.Float(string="General time")
-    priority = fields.Selection(AVAILABLE_PRIORITIES)
+    priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
                                    domain=[("position_ids.name", "=", "Team Lead")])

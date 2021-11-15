@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <record id="action_change_stage" model="ir.actions.server">
+        <field name="name">Move to next stage</field>
+        <field name="model_id" ref="model_task"/>
+        <field name="binding_model_id" ref="Task_tracker.model_task"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.change_stage_tree_view()</field>
+    </record>
+
     <record id="task_view_form" model="ir.ui.view">
         <field name="name">task.view.form</field>
         <field name="model">task</field>
@@ -85,6 +94,9 @@
                                     </li>
                                     <li>Stage:
                                         <field name="stage_id"/>
+                                    </li>
+                                    <li>Project:
+                                        <field name="project_id"/>
                                     </li>
                                     <li>
                                         <field name="priority" widget="priority" class="mr-3"/>

@@ -8,7 +8,7 @@
     'website': '',
     'images': [
     ],
-    'depends': ['base', 'hr'],
+    'depends': ['base', 'hr', 'mail'],
     'data': [
         'data/default_stages.xml',
         'security/ir.model.access.csv',
