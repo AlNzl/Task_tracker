@@ -2,8 +2,8 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
-    ('Low', 'Low'),
-    ('Important', 'Important'),
+    ('low', 'Low'),
+    ('important', 'Important'),
 ]
 
 
@@ -29,7 +29,7 @@ class Task(models.Model):
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id", string="Time tracker")
 
     @api.model
-    def change_stage(self):
+    def _change_stage(self):
         if len(self.stage_id) == 1 and self.stage_id.id < self.env.ref("Task_tracker.task_stage_done").id:
             stage_id = self.stage_id.id + 1
             self.env["task"].browse(self._context.get("active_ids")).update({"stage_id": stage_id})

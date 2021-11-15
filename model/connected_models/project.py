@@ -1,8 +1,8 @@
 from odoo import models, fields, api
 
 AVAILABLE_PRIORITIES = [
-    ('Low', 'Low'),
-    ('Important', 'Important'),
+    ('low', 'Low'),
+    ('important', 'Important'),
 ]
 
 
