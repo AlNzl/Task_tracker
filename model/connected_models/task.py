@@ -26,5 +26,4 @@ class Task(models.Model):
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
-    time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker",
-                               track_visibility="onchange")
+    time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker")
