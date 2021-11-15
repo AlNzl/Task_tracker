@@ -12,7 +12,7 @@ class ReferenceBook(models.Model):
 
     @api.onchange('name')
     def check_duplicate_name(self):
-        if self.env["reference.book"].search([("name", '=', self.name)]):
+        if self.env["reference.book"].search([("name", "=", self.name)]):
             raise UserError(_(f"{self.name} already exists!!!"))
 
 
