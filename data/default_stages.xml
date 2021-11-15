@@ -24,5 +24,21 @@
         <record id="task_stage_done" model="stage">
             <field name="name">Done</field>
         </record>
+
+        <record id="1" model="reference.book">
+            <field name="name">Developer</field>
+        </record>
+        <record id="2" model="reference.book">
+            <field name="name">Team Lead</field>
+        </record>
+        <record id="3" model="reference.book">
+            <field name="name">Project Manager</field>
+        </record>
+        <record id="4" model="reference.book">
+            <field name="name">Business Analyst</field>
+        </record>
+
+
+
     </data>
 </odoo>
