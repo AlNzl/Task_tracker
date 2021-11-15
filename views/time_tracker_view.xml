@@ -10,11 +10,11 @@
                     <field name="description"/>
                     <field name="data"/>
                     <field name="time" widget="float_time"/>
-                    <field name="task_id"/>
                 </group>
             </form>
         </field>
     </record>
+
     <record id="time_tracker_view_tree" model="ir.ui.view">
         <field name="name">time.tracker.view.tree</field>
         <field name="model">time.tracker</field>
@@ -24,7 +24,6 @@
                 <field name="description"/>
                 <field name="data"/>
                 <field name="time" widget="float_time"/>
-                <field name="task_id"/>
             </tree>
         </field>
     </record>
