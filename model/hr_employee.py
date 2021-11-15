@@ -10,6 +10,7 @@ class HrEmployee(models.Model):
     # position = fields.Selection(selection=[('team_lead', 'Team Lead'), ('pm', 'PM'), ('developer', 'Developer'), ('ba', 'BA'), ('dev_tl', 'Developer or Team Lead')])
 
     task_ids = fields.One2many(comodel_name="task", inverse_name="worker_id", string="Tasks")  # Tut taski dolzni bit'
+    time_tracker_line_ids = fields.One2many(comodel_name='time.tracker.line', inverse_name='worker_id', string='Worker')
 
     position_ids = fields.Many2many(comodel_name="reference.book", string="Positions")
 
