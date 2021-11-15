@@ -18,12 +18,25 @@ class Task(models.Model):
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
     priority = fields.Selection(AVAILABLE_PRIORITIES)
-    total_time = fields.Float(string="Total time")
+    ba_time = fields.Float(string="BA time")
+    total_time = fields.Float(string="Total time", compute="_compute_total_time")
 
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange")
 
-    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
+    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker", domain=[("position_ids.name", '=', 'Developer')])
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker")
+
+    @api.onchange("project_id")
+    def _onchange_get_responsible_person(self):
+        for record in self:
+            record.responsible_id = record.project_id.team_lead_id.id
+
+    def _compute_total_time(self):
+        for record in self:
+            record.total_time = record.ba_time * record.worker_id.employee_coefficient
+
+
+

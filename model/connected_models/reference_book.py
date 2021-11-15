@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class ReferenceBook(models.Model):
@@ -8,6 +9,11 @@ class ReferenceBook(models.Model):
     name = fields.Char(string="Profession name", required=True)
 
     employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
+
+    @api.onchange('name')
+    def user_not_create(self):
+        if self.env["reference.book"].search([("name", '=', self.name)]):
+            raise UserError(_(f"{self.name} already exists!!!"))
 
 
 
