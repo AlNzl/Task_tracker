@@ -2,6 +2,7 @@ from odoo import models, fields, api
 
 
 class ReferenceBook(models.Model):
+    """Model reference book"""
     _name = "reference.book"
     _description = "Reference Book"
 

@@ -6,10 +6,9 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="total_time" widget="float_time"/>
-                    <field name="description"/>
-                    <field name="data"/>
                     <field name="time" widget="float_time"/>
+                    <field name="description"/>
+                    <field name="date"/>
                 </group>
             </form>
         </field>
@@ -20,10 +19,9 @@
         <field name="model">time.tracker</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="total_time" widget="float_time"/>
-                <field name="description"/>
-                <field name="data"/>
                 <field name="time" widget="float_time"/>
+                <field name="date"/>
+                <field name="description"/>
             </tree>
         </field>
     </record>

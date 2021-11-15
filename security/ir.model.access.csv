@@ -5,5 +5,5 @@ access_stage,stage,model_stage,base.group_user,1,1,1,1
 access_time_tracker,time.tracker,model_time_tracker,base.group_user,1,1,1,1
 access_hr_employee,hr.employee,model_hr_employee,base.group_user,1,1,1,1
 access_project_line,project.line,model_project_line,base.group_user,1,1,1,1
-access_reference_book,access_reference_book,model_reference_book,base.group_user,1,1,1,1
+access_reference_book,reference.book,model_reference_book,base.group_user,1,1,1,1
 

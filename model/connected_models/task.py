@@ -7,6 +7,7 @@ AVAILABLE_PRIORITIES = [
 
 
 class Task(models.Model):
+    """Model task"""
     _name = "task"
     _description = "Task"
     _inherit = ["mail.thread", "mail.activity.mixin"]

@@ -2,6 +2,7 @@ from odoo import models, fields, api
 
 
 class Stage(models.Model):
+    """Model stage"""
     _name = "stage"
     _description = "Stage"
 
