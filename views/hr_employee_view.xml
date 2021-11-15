@@ -6,16 +6,28 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='coach_id']" position="after">
+            <xpath expr="//sheet/group" position="attributes">-->
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='category_ids']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='job_title']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//notebook" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='category_ids']" position="after">
                 <group>
                     <group>
                         <field name="employee_coefficient"/>
                         <field name="employee_hour"/>
                         <field name="currency_id"/>
                         <field name="position_ids" widget="many2many_tags"/>
-                    </group>
-                    <group>
-                        <field name="task_ids"/>
                     </group>
                 </group>
             </xpath>
@@ -28,7 +40,10 @@
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="position_ids"/>
+                <field name="employee_coefficient"/>
+                <field name="employee_hour"/>
+                <field name="currency_id"/>
+                <field name="position_ids" widget="many2many_tags"/>
             </xpath>
 
             <xpath expr="//field[@name='work_phone']" position="attributes">
