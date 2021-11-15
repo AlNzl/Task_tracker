@@ -35,7 +35,7 @@
                                 <tree editable="bottom">
                                     <field name="description"/>
                                     <field name="date"/>
-                                    <field name="time"/>
+                                    <field name="time" widget="float_time"/>
                                     <field name="worker_id"/>
                                 </tree>
                             </field>
