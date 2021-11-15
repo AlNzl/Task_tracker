@@ -40,13 +40,18 @@ class Project(models.Model):
         for record in self:
             record.worker_ids = [(4, record.project_manager_id.id)]
 
-    def _go_to_tasks(self):
-        return {"name": "Tasks",
-                "view_mode": "kanban",
-                "res_model": "task",
-                "type": "ir.actions.act_window",
-                "domain": [("project_id", "in", self.ids)]
-                }
+    def action_to_tasks(self):
+        """
+
+        """
+        action = {
+            "name": "Tasks",
+            "view_mode": "kanban",
+            "res_model": "task",
+            "type": "ir.actions.act_window",
+            "domain": [("project_id", "in", self.ids)]
+        }
+        return action
 
 
 class ProjectLine(models.Model):

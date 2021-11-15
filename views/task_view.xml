@@ -25,13 +25,24 @@
                         </group>
                         <group>
                             <field name="worker_id"/>
-                            <field name="ba_time" widget="float_time"/>
+                            <field name="ba_time"/>
                             <field name="responsible_id"/>
                         </group>
                     </group>
-                    <div>
-                        <field name="time_ids"/>
-                    </div>
+
+                    <notebook>
+                        <page string="Time tracker">
+                            <field name="time_tracker_line_ids">
+                                <tree editable="bottom">
+                                    <field name="description"/>
+                                    <field name="date"/>
+                                    <field name="time" widget="float_time"/>
+                                    <field name="worker_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -55,11 +66,12 @@
                 <field name="priority"/>
                 <field name="responsible_id"/>
                 <field name="project_id"/>
-                <field name="time_ids"/>
+                <field name="time_tracker_line_ids"/>
                 <field name="total_time" widget="float_time"/>
             </tree>
         </field>
     </record>
+
     <record id="task_view_kanban" model="ir.ui.view">
         <field name="name">task.view.kanban</field>
         <field name="model">task</field>

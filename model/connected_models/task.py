@@ -18,7 +18,8 @@ class Task(models.Model):
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
     priority = fields.Selection(AVAILABLE_PRIORITIES)
-    total_time = fields.Float(string="Total time")
+    ba_time = fields.Float(string="BA time")
+    total_time = fields.Float(string="Total time", compute="_compute_total_time")
 
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange")
