@@ -48,7 +48,11 @@ class Task(models.Model):
     def _change_stage(self):
         """Change stage on tree view if currents stages the same"""
         stage_dct = self.create_stage_dct()
-        if all((len(self.stage_id) == 1, self.stage_id.id in stage_dct, self.stage_id.id != self.env.ref("Task_tracker.task_stage_done").id)):
+        acceptance_criteria = [len(self.stage_id) == 1,
+                               self.stage_id.id in stage_dct,
+                               self.stage_id.id != self.env.ref("Task_tracker.task_stage_done").id
+                               ]
+        if all(acceptance_criteria):
             stage_id = stage_dct[self.stage_id.id]["next"]
             self.env["task"].browse(self._context.get("active_ids")).update({"stage_id": stage_id})
         else:
