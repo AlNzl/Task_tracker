@@ -7,7 +7,6 @@ AVAILABLE_PRIORITIES = [
 
 
 class Task(models.Model):
-    """Model task"""
     _name = "task"
     _description = "Task"
     _inherit = ["mail.thread", "mail.activity.mixin"]
@@ -27,4 +26,15 @@ class Task(models.Model):
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
-    time_ids = fields.One2many(comodel_name="time.tracker", inverse_name="task_id", string="Time tracker")
+    time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id", string="Time tracker")
+
+
+class TimeTrackerLine(models.Model):
+    _name = 'time.tracker.line'
+
+    task_id = fields.Many2one(comodel_name='task', string='Time Tracker')
+    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
+
+    description = fields.Text(string='Description')
+    date = fields.Date(string='Date')
+    time = fields.Float(string='Time spent')

@@ -9,6 +9,7 @@ class HrEmployee(models.Model):
     employee_hour = fields.Monetary(string="Employee hour")
 
     task_ids = fields.One2many(comodel_name="task", inverse_name="worker_id", string="Tasks")  # Tut taski dolzni bit'
+    time_tracker_line_ids = fields.One2many(comodel_name='time.tracker.line', inverse_name='worker_id', string='Worker')
 
     position_ids = fields.Many2many(comodel_name="reference.book", string="Job Position")
 
