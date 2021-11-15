@@ -23,10 +23,20 @@ class Task(models.Model):
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange")
 
-    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
+    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker",
+                                domain=[("position_ids.name", '=', 'Developer')])
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id", string="Time tracker")
+
+    @api.onchange("project_id")
+    def _onchange_get_responsible_person(self):
+        for record in self:
+            record.responsible_id = record.project_id.team_lead_id.id
+
+    def _compute_total_time(self):
+        for record in self:
+            record.total_time = record.ba_time * record.worker_id.employee_coefficient
 
 
 class TimeTrackerLine(models.Model):
