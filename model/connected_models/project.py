@@ -1,8 +1,8 @@
 from odoo import models, fields, api
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Low'),
-    ('1', 'Important'),
+    ("0", "Low"),
+    ("1", "Important"),
 ]
 
 
@@ -32,11 +32,17 @@ class Project(models.Model):
 
     @api.onchange("team_lead_id")
     def _onchange_auto_select_team_lead(self):
+        """
+        Link worker with TL
+        """
         for record in self:
             record.worker_ids = [(4, record.team_lead_id.id)]
 
     @api.onchange("project_manager_id")
     def _onchange_auto_select_project_manager(self):
+        """
+        Link worker with PM
+        """
         for record in self:
             record.worker_ids = [(4, record.project_manager_id.id)]
 

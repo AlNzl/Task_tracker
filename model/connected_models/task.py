@@ -1,8 +1,8 @@
 from odoo import models, fields, api
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Low'),
-    ('1', 'Important'),
+    ("0", "Low"),
+    ("1", "Important"),
 ]
 
 
@@ -25,7 +25,7 @@ class Task(models.Model):
                                track_visibility="onchange")
 
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker",
-                                domain=[("position_ids.name", '=', 'Developer')])
+                                domain=[("position_ids.name", "=", "Developer")])
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id", string="Time tracker")
@@ -41,11 +41,11 @@ class Task(models.Model):
 
 
 class TimeTrackerLine(models.Model):
-    _name = 'time.tracker.line'
+    _name = "time.tracker.line"
 
-    task_id = fields.Many2one(comodel_name='task', string='Time Tracker')
+    task_id = fields.Many2one(comodel_name="task", string="Time Tracker")
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
 
-    description = fields.Text(string='Description')
-    date = fields.Date(string='Date')
-    time = fields.Float(string='Time spent')
+    description = fields.Text(string="Description")
+    date = fields.Date(string="Date")
+    time = fields.Float(string="Time spent")
