@@ -12,17 +12,30 @@ class Task(models.Model):
         stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         return stage_id
 
+    def select_tl(self):
+        """Domain for select team leads"""
+        tl_name = self.env.ref("Task_tracker.reference_book_team_lead").name
+        domain = [("position_ids.name", "=", tl_name)]
+        return domain
+
+    def select_developer(self):
+        """Domain for select developers"""
+        dev_name = self.env.ref("Task_tracker.reference_book_developer").name
+        domain = [("position_ids.name", "=", dev_name)]
+        return domain
+
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
     ba_time = fields.Float(string="BA time")
     total_time = fields.Float(string="Total time", compute="_compute_total_time")
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
 
-
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange", group_expand="_read_group_stage_ids")
-    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker", domain=[("position_ids.id", "=", "reference_book_developer")])
-    responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person", domain=[("position_ids.id", "=", "reference_book_team_lead")])
+    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker",
+                                domain=select_developer)
+    responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person",
+                                     domain=select_tl)
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
@@ -70,12 +83,9 @@ class Task(models.Model):
         """
         Inserts a value from team_lead_id to responsible_id
         """
-        # team_leads = self.env["hr.employee"].search("")
         for record in self:
-            # team_leads = record.project_id.team_lead_id.id
-            print(record.worker_id.position_ids.id, record.worker_id.position_ids.name)
-            record.responsible_id = [(4, record.project_id.team_lead_id.id)]
-            # record.responsible_id = record.project_id.team_lead_id.id
+            record.responsible_id = record.project_id.team_lead_id.id
+            print(record.project_id.team_lead_id.id)
 
     def _compute_total_time(self):
         """
@@ -95,6 +105,3 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
-
-
-

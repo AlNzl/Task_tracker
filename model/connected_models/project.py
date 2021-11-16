@@ -10,18 +10,30 @@ class Project(models.Model):
     _name = "project"
     _description = "Project"
 
+    def select_tl(self):
+        """Domain for select team leads"""
+        tl_name = self.env.ref("Task_tracker.reference_book_team_lead").name
+        domain = [("position_ids.name", "=", tl_name)]
+        return domain
+
+    def select_pm(self):
+        """Domain for select project managers"""
+        pm_name = self.env.ref("Task_tracker.reference_book_project_manager").name
+        domain = [("position_ids.name", "=", pm_name)]
+        return domain
+
     name = fields.Char(string="Project name", required="True")
     description = fields.Text(string="Description")
     date_of_registration = fields.Datetime(string="Date", default=lambda self: fields.datetime.now())
-    currency_id = fields.Many2one(comodel_name="res.currency", string="currency")
+    currency_id = fields.Many2one(comodel_name="res.currency", string="Currency")
     total_price = fields.Monetary(string="Total Price")
     time = fields.Float(string="General time")
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
-                                   domain=[("position_ids.id", "=", "reference_book_team_lead")])
-    project_manager_id = fields.Many2one(comodel_name="hr.employee", string="reference_book_project_manager",
-                                         domain=[("position_ids.id", "=", "3")])
+                                   domain=select_tl)
+    project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
+                                         domain=select_pm)
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
     task_count = fields.Integer(string="Number of task", compute="_compute_count")
