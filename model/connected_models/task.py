@@ -77,7 +77,7 @@ class Task(models.Model):
     def _compute_total_time(self):
         """
         Calculates total time
-        total_time = ba_time * coefficient
+        total_time = Business_Analyst_time * coefficient
         """
         for record in self:
             record.total_time = record.ba_time * record.worker_id.employee_coefficient
