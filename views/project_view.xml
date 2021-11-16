@@ -79,6 +79,7 @@
                                 <tree editable="bottom">
                                     <field name="employee_id"/>
                                     <field name="sold"/>
+                                    <field name="position_id"/>
                                 </tree>
                             </field>
                         </page>
