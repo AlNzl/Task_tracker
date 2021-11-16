@@ -99,14 +99,19 @@ class Task(models.Model):
         if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
             self.timer = timer
+            return timer
 
     def write(self, vals):
         """
         If datetime now < timer, we are not allowed to change
         """
-        if self.timer < datetime.now():
-            raise UserError(_("You can no longer change Time tracker"))
-        if not self.timer or self.timer > datetime.now():
+        if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
+            if not self.timer or self.timer > datetime.now():
+                res = super(Task, self).write(vals)
+                return res
+            else:
+                raise UserError(_("You can no longer change Time tracker"))
+        else:
             res = super(Task, self).write(vals)
             return res
 
@@ -120,3 +125,10 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
+
+    def create(self, vals):
+        if self.time > 10.00:
+            raise UserError(_("You can no work more than 10 hours"))
+        else:
+            res = super(TimeTrackerLine, self).create(vals)
+            return res

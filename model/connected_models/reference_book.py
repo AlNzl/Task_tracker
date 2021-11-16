@@ -16,4 +16,4 @@ class ReferenceBook(models.Model):
         When creating a duplicate calls UserError
         """
         if self.env["reference.book"].search([("name", "=", self.name)]):
-            raise UserError(_("%s already exists!!!" % (self.name)))
+            raise UserError(_("%s already exists!!!" % self.name))
