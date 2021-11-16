@@ -116,8 +116,7 @@ class Task(models.Model):
         progress_id = self.env.ref("Task_tracker.task_stage_progress").id
         review_id = self.env.ref("Task_tracker.task_stage_review").id
         if origin_id == progress_id and current_id == review_id:
-            for record in self:
-                record.responsible_id = record.project_id.team_lead_id.id
+            self.responsible_id = self.project_id.team_lead_id.id
 
 
 class TimeTrackerLine(models.Model):
