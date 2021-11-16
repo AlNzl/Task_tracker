@@ -105,7 +105,7 @@ class Task(models.Model):
         If datetime now < timer, we are not allowed to change
         """
         if self.timer < datetime.now():
-            raise UserError("You can no longer change Time tracker")
+            raise UserError(_("You can no longer change Time tracker"))
         if not self.timer or self.timer > datetime.now():
             res = super(Task, self).write(vals)
             return res
