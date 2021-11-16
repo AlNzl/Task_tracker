@@ -12,18 +12,6 @@ class Task(models.Model):
         stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         return stage_id
 
-    def select_tl(self):
-        """Domain for select team leads"""
-        tl_name = self.env.ref("Task_tracker.reference_book_team_lead").name
-        domain = [("position_ids.name", "=", tl_name)]
-        return domain
-
-    def select_developer(self):
-        """Domain for select developers"""
-        dev_name = self.env.ref("Task_tracker.reference_book_developer").name
-        domain = [("position_ids.name", "=", dev_name)]
-        return domain
-
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
     ba_time = fields.Float(string="BA time")
@@ -33,9 +21,9 @@ class Task(models.Model):
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange", group_expand="_read_group_stage_ids")
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker",
-                                domain=select_developer)
+                                domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_developer").id)])
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person",
-                                     domain=select_tl)
+                                     domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
@@ -85,12 +73,11 @@ class Task(models.Model):
         """
         for record in self:
             record.responsible_id = record.project_id.team_lead_id.id
-            print(record.project_id.team_lead_id.id)
 
     def _compute_total_time(self):
         """
         Calculates total time
-        total_time = ba_time * koef
+        total_time = ba_time * coefficient
         """
         for record in self:
             record.total_time = record.ba_time * record.worker_id.employee_coefficient

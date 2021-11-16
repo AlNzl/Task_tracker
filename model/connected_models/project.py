@@ -10,18 +10,6 @@ class Project(models.Model):
     _name = "project"
     _description = "Project"
 
-    def select_tl(self):
-        """Domain for select team leads"""
-        tl_name = self.env.ref("Task_tracker.reference_book_team_lead").name
-        domain = [("position_ids.name", "=", tl_name)]
-        return domain
-
-    def select_pm(self):
-        """Domain for select project managers"""
-        pm_name = self.env.ref("Task_tracker.reference_book_project_manager").name
-        domain = [("position_ids.name", "=", pm_name)]
-        return domain
-
     name = fields.Char(string="Project name", required="True")
     description = fields.Text(string="Description")
     date_of_registration = fields.Datetime(string="Date", default=lambda self: fields.datetime.now())
@@ -31,9 +19,9 @@ class Project(models.Model):
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
-                                   domain=select_tl)
+                                   domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
-                                         domain=select_pm)
+                                         domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_project_manager").id)])
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
     task_count = fields.Integer(string="Number of task", compute="_compute_count")
@@ -59,9 +47,7 @@ class Project(models.Model):
             record.worker_ids = [(4, record.project_manager_id.id)]
 
     def action_to_tasks(self):
-        """
-
-        """
+        """In tree view the server activity , action to tasks of only the selected projects"""
         action = {
             "name": "Tasks",
             "view_mode": "kanban",
@@ -70,6 +56,7 @@ class Project(models.Model):
             "domain": [("project_id", "in", self.ids)]
         }
         return action
+
 
 
 class ProjectLine(models.Model):
