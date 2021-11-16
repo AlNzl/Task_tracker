@@ -84,12 +84,6 @@ class Task(models.Model):
         stage_ids = self.env["stage"].search([])
         return stage_ids
 
-    @api.onchange("project_id")
-    def _onchange_project_id(self):
-        """Inserts a value from team_lead_id to responsible_id"""
-        for record in self:
-            record.responsible_id = record.project_id.team_lead_id.id
-
     @api.depends("ba_time", "worker_id.employee_coefficient")
     def _compute_total_time(self):
         """Calculates total time"""
