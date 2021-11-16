@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from .project import AVAILABLE_PRIORITIES
+from datetime import datetime, timedelta
 
 
 class Task(models.Model):
@@ -27,6 +28,7 @@ class Task(models.Model):
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
+    timer = fields.Datetime(string="Timer")
 
     def create_stage_dct(self):
         """Create dict with stages"""
@@ -81,6 +83,27 @@ class Task(models.Model):
         for record in self:
             record.total_time = record.ba_time * record.worker_id.employee_coefficient
 
+    @api.constrains("stage_id")
+    def check_stage(self):
+        """
+        Here we check the stage, if it is in 'In progress', we start the timer
+        :return: Timer(type: datetime)
+        """
+        if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
+            timer = datetime.now() + timedelta(hours=self.total_time, days=1)
+            self.timer = timer
+
+    def write(self, vals):
+        """
+        If datetime now < timer, we are not allowed to change
+        :param vals: info Time tracker
+        :return: if: error else: vals
+        """
+        if self.timer < datetime.now():
+            raise UserError("You can no longer change Time tracker")
+        if not self.timer:
+            res = super(Task, self).write(vals)
+            return res
 
 class TimeTrackerLine(models.Model):
     _name = "time.tracker.line"
