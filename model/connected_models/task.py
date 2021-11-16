@@ -33,7 +33,9 @@ class Task(models.Model):
     timer = fields.Datetime(string="Timer")
 
     def create_stage_dct(self):
-        """Create dict with stages"""
+        """
+        Create dict with stages
+        """
         back = self.env.ref("Task_tracker.task_stage_backlog").id
         ready = self.env.ref("Task_tracker.task_stage_ready").id
         progress = self.env.ref("Task_tracker.task_stage_progress").id
@@ -52,7 +54,9 @@ class Task(models.Model):
 
     @api.model
     def change_stage(self):
-        """Change stage on tree view if currents stages the same"""
+        """
+        Change stage on tree view if currents stages the same
+        """
         stage_dct = self.create_stage_dct()
         acceptance_criteria = [len(self.stage_id) == 1,
                                self.stage_id.id in stage_dct,
@@ -66,7 +70,9 @@ class Task(models.Model):
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
-        """Group stage_ids default"""
+        """
+        Group stage_ids default
+        """
         stage_ids = self.env["stage"].search([])
         return stage_ids
 
@@ -89,7 +95,6 @@ class Task(models.Model):
     def check_stage(self):
         """
         Here we check the stage, if it is in 'In progress', we start the timer
-        :return:
         """
         if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
@@ -98,8 +103,6 @@ class Task(models.Model):
     def write(self, vals):
         """
         If datetime now < timer, we are not allowed to change
-        :param
-        :return:
         """
         if self.timer < datetime.now():
             raise UserError("You can no longer change Time tracker")
