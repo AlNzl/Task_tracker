@@ -101,19 +101,43 @@ class Task(models.Model):
             self.timer = timer
             return timer
 
+    @api.model
+    def create(self, vals):
+        """
+        If datetime now < timer, we are not allowed to change
+        """
+        bl = self.env.ref("Task_tracker.task_stage_backlog").id
+        ready = self.env.ref("Task_tracker.task_stage_ready").id
+        if vals.get("stage_id") != bl and vals.get("stage_id") != ready:
+            if not self.timer or self.timer > datetime.now():
+                self.check_time_work(vals)
+            else:
+                raise UserError(_("You can no longer change Time tracker"))
+        else:
+            if "time_tracker_line_ids" in vals:
+                raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
+            else:
+                res = super(Task, self).create(vals)
+                return res
+
     def write(self, vals):
         """
         If datetime now < timer, we are not allowed to change
         """
-        if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
+        bl = self.env.ref("Task_tracker.task_stage_backlog").id
+        ready = self.env.ref("Task_tracker.task_stage_ready").id
+        if self.stage_id.id != bl and vals.get("stage_id") != ready:
             if not self.timer or self.timer > datetime.now():
                 res = super(Task, self).write(vals)
                 return res
             else:
                 raise UserError(_("You can no longer change Time tracker"))
         else:
-            res = super(Task, self).write(vals)
-            return res
+            if "time_tracker_line_ids" in vals:
+                raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
+            else:
+                res = super(Task, self).write(vals)
+                return res
 
 
 class TimeTrackerLine(models.Model):
@@ -125,10 +149,3 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
-
-    def create(self, vals):
-        if self.time > 10.00:
-            raise UserError(_("You can no work more than 10 hours"))
-        else:
-            res = super(TimeTrackerLine, self).create(vals)
-            return res
