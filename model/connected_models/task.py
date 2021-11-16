@@ -22,9 +22,11 @@ class Task(models.Model):
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange", group_expand="_read_group_stage_ids")
     worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker",
-                                domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_developer").id)])
+                                domain=lambda self: [
+                                    ("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_developer").id)])
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person",
-                                     domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
+                                     domain=lambda self: [("position_ids.id", "=",
+                                                           self.env.ref("Task_tracker.reference_book_team_lead").id)])
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
@@ -87,7 +89,7 @@ class Task(models.Model):
     def check_stage(self):
         """
         Here we check the stage, if it is in 'In progress', we start the timer
-        :return: Timer(type: datetime)
+        :return:
         """
         if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
@@ -96,14 +98,15 @@ class Task(models.Model):
     def write(self, vals):
         """
         If datetime now < timer, we are not allowed to change
-        :param vals: info Time tracker
-        :return: if: error else: vals
+        :param
+        :return:
         """
         if self.timer < datetime.now():
             raise UserError("You can no longer change Time tracker")
-        if not self.timer:
+        if not self.timer or self.timer > datetime.now():
             res = super(Task, self).write(vals)
             return res
+
 
 class TimeTrackerLine(models.Model):
     _name = "time.tracker.line"
