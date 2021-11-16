@@ -19,7 +19,7 @@ class Project(models.Model):
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
-                                   domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
+                                   domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)], required="True")
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
                                          domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_project_manager").id)])
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")

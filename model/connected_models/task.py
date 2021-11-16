@@ -77,14 +77,6 @@ class Task(models.Model):
         stage_ids = self.env["stage"].search([])
         return stage_ids
 
-    @api.onchange("project_id")
-    def _onchange_project_id(self):
-        """
-        Inserts a value from team_lead_id to responsible_id
-        """
-        for record in self:
-            record.responsible_id = record.project_id.team_lead_id.id
-
     def _compute_total_time(self):
         """
         Calculates total time
@@ -100,16 +92,6 @@ class Task(models.Model):
         if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
             self.timer = timer
-
-    def write(self, vals):
-        """
-        If datetime now < timer, we are not allowed to change
-        """
-        if self.timer < datetime.now():
-            raise UserError(_("You can no longer change Time tracker"))
-        if not self.timer or self.timer > datetime.now():
-            res = super(Task, self).write(vals)
-            return res
 
     @api.onchange("stage_id")
     def _onchange_stage_id(self):
