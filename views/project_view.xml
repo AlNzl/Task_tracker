@@ -78,8 +78,8 @@
                             <field name="project_line_ids">
                                 <tree editable="bottom">
                                     <field name="employee_id"/>
-                                    <field name="sold"/>
                                     <field name="position_id"/>
+                                    <field name="sold"/>
                                 </tree>
                             </field>
                         </page>
@@ -92,7 +92,7 @@
         </field>
     </record>
 
-<record id="project_view_tree" model="ir.ui.view">
+    <record id="project_view_tree" model="ir.ui.view">
         <field name="name">project.view.tree</field>
         <field name="model">project</field>
         <field name="arch" type="xml">
@@ -171,13 +171,14 @@
                 <field name="task_ids"/>
                 <group expand="1" string="Group By">
                     <filter string="Team Lead" name="team_lead_id" context="{'group_by':'team_lead_id'}"/>
-                    <filter string="Project Manager" name="project_manager_id" context="{'group_by':'project_manager_id'}"/>
+                    <filter string="Project Manager" name="project_manager_id"
+                            context="{'group_by':'project_manager_id'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-<record id="project_action" model="ir.actions.act_window">
+    <record id="project_action" model="ir.actions.act_window">
         <field name="name">Project</field>
         <field name="res_model">project</field>
         <field name="view_mode">kanban,form,tree</field>
