@@ -11,6 +11,7 @@
     'depends': ['base', 'hr', 'mail'],
     'data': [
         'data/default_stages.xml',
+        'data/default_reference_book.xml',
         'security/ir.model.access.csv',
         'views/task_view.xml',
         'views/project_view.xml',

@@ -25,20 +25,5 @@
             <field name="name">Done</field>
         </record>
 
-        <record id="reference_book_developer" model="reference.book">
-            <field name="name">Developer</field>
-        </record>
-        <record id="reference_book_team_lead" model="reference.book">
-            <field name="name">Team Lead</field>
-        </record>
-        <record id="reference_book_project_manager" model="reference.book">
-            <field name="name">Project Manager</field>
-        </record>
-        <record id="reference_book_business_analyst" model="reference.book">
-            <field name="name">Business Analyst</field>
-        </record>
-
-
-
     </data>
 </odoo>

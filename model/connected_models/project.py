@@ -78,4 +78,4 @@ class ProjectLine(models.Model):
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
     sold = fields.Float(string="Sold")
-    project_id = fields.Many2one(comodel_name="project", string="Worker")
+    project_id = fields.Many2one(comodel_name="project", string="Project")
