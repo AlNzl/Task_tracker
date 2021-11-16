@@ -46,11 +46,14 @@ class Task(models.Model):
 
     def write(self, vals):
         """
-        If datetime now < timer, we are not allowed to change
+        If datetime now < timer, we are not allowed to change.
         :param vals: info Time tracker
         :return: if: error else: vals
         """
-        if self.timer < datetime.now():
+        if isinstance(self.timer, bool):
+            res = super(Task, self).write(vals)
+            return res
+        elif self.timer < datetime.now():
             raise UserError("You can no longer change Time tracker")
         else:
             res = super(Task, self).write(vals)
