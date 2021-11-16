@@ -24,5 +24,6 @@
         <record id="task_stage_done" model="stage">
             <field name="name">Done</field>
         </record>
+
     </data>
 </odoo>

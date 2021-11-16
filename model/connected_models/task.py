@@ -9,19 +9,21 @@ class Task(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def _get_default_stage_id(self):
-        """Get default stage"""
         stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         return stage_id
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
+    ba_time = fields.Float(string="BA time")
+    total_time = fields.Float(string="Total time", compute="_compute_total_time")
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
-    total_time = fields.Float(string="Total time")
 
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
                                track_visibility="onchange", group_expand="_read_group_stage_ids")
-    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker")
-    responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person")
+    worker_id = fields.Many2one(comodel_name="hr.employee", string="Worker",
+                                domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_developer").id)])
+    responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person",
+                                     domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
     project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
@@ -64,6 +66,21 @@ class Task(models.Model):
         stage_ids = self.env["stage"].search([])
         return stage_ids
 
+    @api.onchange("project_id")
+    def _onchange_project_id(self):
+        """
+        Inserts a value from team_lead_id to responsible_id
+        """
+        for record in self:
+            record.responsible_id = record.project_id.team_lead_id.id
+
+    def _compute_total_time(self):
+        """
+        Calculates total time
+        """
+        for record in self:
+            record.total_time = record.ba_time * record.worker_id.employee_coefficient
+
 
 class TimeTrackerLine(models.Model):
     _name = "time.tracker.line"
@@ -74,6 +91,3 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
-
-
-
