@@ -42,7 +42,7 @@ class Task(models.Model):
         if self.stage_id.name == "In progress":
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
             self.timer = timer
-            return print(self.timer)
+            return self.timer
 
     def write(self, vals):
         """
