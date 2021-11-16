@@ -25,6 +25,7 @@
                         <h2>
                             <field name="description" placeholder="Description"/>
                         </h2>
+                        <field name="task_progress" widget="progressbar"/>
                     </div>
                     <group>
                         <group>
@@ -43,15 +44,14 @@
                         <page string="Time tracker">
                             <field name="time_tracker_line_ids">
                                 <tree editable="bottom">
+                                    <field name="worker_id"/>
                                     <field name="description"/>
                                     <field name="date"/>
                                     <field name="time" widget="float_time"/>
-                                    <field name="worker_id"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
-
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -104,14 +104,17 @@
                                     <li>Responsible person:
                                         <field name="responsible_id"/>
                                     </li>
-                                    <li invisible="1"> Stage:
-                                        <field name="stage_id"/>
+                                    <li invisible="1">Stage:
+                                        <field name="stage_id" />
                                     </li>
                                     <li>Project:
                                         <field name="project_id"/>
                                     </li>
                                     <li>
                                         <field name="priority" widget="priority" class="mr-3"/>
+                                    </li>
+                                    <li>
+                                        <field name="task_progress" widget="progressbar"/>
                                     </li>
                                 </ul>
                             </div>
@@ -133,8 +136,7 @@
                 <field name="project_id"/>
                 <field name="responsible_id"/>
                 <group expand="1" string="Group By">
-                    <filter string="Project" name="group_id" context="{'group_by':'project_id'}"/>
-                    <filter string="Responsible" name="country_id" context="{'group_by':'responsible_id'}"/>
+                    <filter string="Responsible" name="responsible_id'" context="{'group_by':'responsible_id'}"/>
                 </group>
             </search>
         </field>

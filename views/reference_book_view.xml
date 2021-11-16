@@ -16,6 +16,7 @@
         </field>
     </record>
 
+
     <record id="reference_book_view_kanban" model="ir.ui.view">
         <field name="name">reference.book.view.kanban</field>
         <field name="model">reference.book</field>
@@ -44,10 +45,37 @@
     </record>
 
 
+    <record id="reference_book_view_tree" model="ir.ui.view">
+        <field name="name">reference.book.view.tree</field>
+        <field name="model">reference.book</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="reference_book_form_search" model="ir.ui.view">
+        <field name="name">reference.book.search</field>
+        <field name="model">reference.book</field>
+        <field name="arch" type="xml">
+            <search string="Project">
+                <field name="name"/>
+                <field name="employee_ids"/>
+                <group expand="1" string="Group By">
+                    <filter string="Profession name" name="name" context="{'group_by':'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
     <record id="reference_book_view_action" model="ir.actions.act_window">
         <field name="name">Reference Book</field>
         <field name="res_model">reference.book</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">kanban,form,tree</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             </p>
