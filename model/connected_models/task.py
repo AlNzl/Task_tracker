@@ -36,7 +36,7 @@ class Task(models.Model):
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
 
     def _compute_task_progress(self):
-        """calculates the percentage of completion of the task"""
+        """Calculates the percentage of completion of the task"""
         for record in self:
             try:
                 record.task_progress = sum(record.time_tracker_line_ids.mapped("time")) * 100 / record.total_time
