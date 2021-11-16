@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 class ReferenceBook(models.Model):
     _name = "reference.book"
     _description = "Reference Book"
-    _inherit = "hr.department"
 
     name = fields.Char(string="Profession name", required=True)
 

@@ -10,6 +10,7 @@ class Task(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def _get_default_stage_id(self):
+        """Get default stage id"""
         stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         return stage_id
 

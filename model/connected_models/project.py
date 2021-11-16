@@ -36,6 +36,7 @@ class Project(models.Model):
 
     @api.onchange("name")
     def _onchange_name(self):
+        """func check duplicate in project name"""
         if self.env["project"].search([("name", "=", self.name)]):
             raise UserError(_("Project with the same name already exists"))
 
