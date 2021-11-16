@@ -27,7 +27,7 @@ class Task(models.Model):
     responsible_id = fields.Many2one(comodel_name="hr.employee", string="Responsible person",
                                      domain=lambda self: [("position_ids.id", "=",
                                                            self.env.ref("Task_tracker.reference_book_team_lead").id)])
-    project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade")
+    project_id = fields.Many2one(comodel_name="project", string="Project", ondelete="cascade", required=True)
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
     timer = fields.Datetime(string="Timer")
@@ -48,7 +48,8 @@ class Task(models.Model):
             ready: {"previous": back, "next": progress},
             progress: {"previous": ready, "next": review},
             review: {"previous": test, "next": progress},
-            test: {"previous": review, "next": done}
+            test: {"previous": review, "next": done},
+            done: {"previous": test},
         }
         return stage_dct
 
@@ -109,6 +110,28 @@ class Task(models.Model):
         if not self.timer or self.timer > datetime.now():
             res = super(Task, self).write(vals)
             return res
+
+    @api.onchange("stage_id")
+    def _onchange_stage_id(self):
+        """Changing stage only to next or previous"""
+        stage_dct = self.create_stage_dct()
+        origin_id = self._origin.stage_id.id
+        current_id = self.stage_id.id
+        if origin_id in stage_dct:
+            is_next = stage_dct[origin_id].get("next") == current_id
+            is_previous = stage_dct[origin_id].get("previous") == current_id
+            if not is_previous and not is_next:
+                raise UserError(_("The stage can't be changed."))
+        self._onchange_stage_to_review(origin_id, current_id)
+
+    @api.onchange("stage_id")
+    def _onchange_stage_to_review(self, origin_id=None, current_id=None):
+        """Put responsible on the task when changing stage from 'in progress' to 'review'"""
+        progress_id = self.env.ref("Task_tracker.task_stage_progress").id
+        review_id = self.env.ref("Task_tracker.task_stage_review").id
+        if origin_id == progress_id and current_id == review_id:
+            for record in self:
+                record.responsible_id = record.project_id.team_lead_id.id
 
 
 class TimeTrackerLine(models.Model):

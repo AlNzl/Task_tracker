@@ -104,8 +104,11 @@
                                     <li>Responsible person:
                                         <field name="responsible_id"/>
                                     </li>
-                                    <li>Stage:
+                                    <li invisible="1"> Stage:
                                         <field name="stage_id"/>
+                                    </li>
+                                    <li>Project:
+                                        <field name="project_id"/>
                                     </li>
                                     <li>
                                         <field name="priority" widget="priority" class="mr-3"/>
