@@ -8,7 +8,7 @@
         <field name="binding_model_id" ref="model_project"/>
         <field name="state">code</field>
         <field name="binding_view_types">list</field>
-        <field name="code">action=records._go_to_tasks()</field>
+        <field name="code">action=records.action_to_tasks()</field>
     </record>
 
 

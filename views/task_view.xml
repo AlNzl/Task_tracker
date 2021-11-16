@@ -34,6 +34,7 @@
                         </group>
                         <group>
                             <field name="worker_id"/>
+                            <field name="ba_time"/>
                             <field name="responsible_id"/>
                         </group>
                     </group>

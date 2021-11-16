@@ -7,58 +7,62 @@ AVAILABLE_PRIORITIES = [
 
 
 class Project(models.Model):
-    """Model project"""
     _name = "project"
     _description = "Project"
 
     name = fields.Char(string="Project name", required="True")
     description = fields.Text(string="Description")
     date_of_registration = fields.Datetime(string="Date", default=lambda self: fields.datetime.now())
-    currency_id = fields.Many2one(comodel_name="res.currency", string="currency")
+    currency_id = fields.Many2one(comodel_name="res.currency", string="Currency")
     total_price = fields.Monetary(string="Total Price")
     time = fields.Float(string="General time")
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
-                                   domain=[("position_ids.name", "=", "Team Lead")])
+                                   domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
-                                         domain=[("position_ids.name", "=", "Project Manager")])
+                                         domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_project_manager").id)])
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
-    task_count = fields.Integer(string="Number of task", compute="_compute_task_count")
+    task_count = fields.Integer(string="Number of task", compute="_compute_count")
 
-    def _compute_task_count(self):
-        """counts the number of tasks in a project for a specific project"""
+    def _compute_count(self):
         for record in self:
             record.task_count = self.env["task"].search_count([("project_id", "=", self.id)])
 
     @api.onchange("team_lead_id")
-    def _onchange_auto_select_team_lead(self):
-        """Auto select team lead"""
+    def _onchange_team_lead_id(self):
+        """
+        Link worker with TL
+        """
         for record in self:
             record.worker_ids = [(4, record.team_lead_id.id)]
 
     @api.onchange("project_manager_id")
-    def _onchange_auto_select_project_manager(self):
-        """Auto select project manager"""
+    def _onchange_project_manager_id(self):
+        """
+        Link worker with PM
+        """
         for record in self:
             record.worker_ids = [(4, record.project_manager_id.id)]
 
-    def _go_to_tasks(self):
-        """in tree view the server activity goes to tasks of only the selected projects"""
-        return {"name": "Tasks",
-                "view_mode": "kanban",
-                "res_model": "task",
-                "type": "ir.actions.act_window",
-                "domain": [("project_id", "in", self.ids)]
-                }
+    def action_to_tasks(self):
+        """In tree view the server activity , action to tasks of only the selected projects"""
+        action = {
+            "name": "Tasks",
+            "view_mode": "kanban",
+            "res_model": "task",
+            "type": "ir.actions.act_window",
+            "domain": [("project_id", "in", self.ids)]
+        }
+        return action
+
 
 
 class ProjectLine(models.Model):
-    """Model project line"""
     _name = "project.line"
     _description = "Project Line"
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
     sold = fields.Float(string="Sold")
-    project_id = fields.Many2one(comodel_name="project", string="Worker")
+    project_id = fields.Many2one(comodel_name="project", string="Project")
