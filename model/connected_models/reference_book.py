@@ -3,9 +3,9 @@ from odoo.exceptions import UserError
 
 
 class ReferenceBook(models.Model):
-    """Model reference book"""
     _name = "reference.book"
     _description = "Reference Book"
+    _inherit = "hr.department"
 
     name = fields.Char(string="Profession name", required=True)
 
@@ -13,8 +13,6 @@ class ReferenceBook(models.Model):
 
     @api.onchange("name")
     def _onchange_name(self):
-        """
-        When creating a duplicate calls UserError
-        """
+        """When creating a duplicate calls UserError"""
         if self.env["reference.book"].search([("name", "=", self.name)]):
             raise UserError(_("%s already exists!!!" % (self.name)))

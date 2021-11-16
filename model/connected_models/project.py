@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
     ("low", "Low"),
@@ -19,44 +20,47 @@ class Project(models.Model):
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
-                                   domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)])
+                                   domain=lambda self: [("position_ids.id", "=",
+                                                         self.env.ref("Task_tracker.reference_book_team_lead").id)])
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
-                                         domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_project_manager").id)])
+                                         domain=lambda self: [("position_ids.id", "=", self.env.ref(
+                                             "Task_tracker.reference_book_project_manager").id)])
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
     task_count = fields.Integer(string="Number of task", compute="_compute_count")
 
     def _compute_count(self):
+        """counts the number of tasks in the project"""
         for record in self:
             record.task_count = self.env["task"].search_count([("project_id", "=", self.id)])
 
+    @api.onchange("name")
+    def _onchange_name(self):
+        if self.env["project"].search([("name", "=", self.name)]):
+            raise UserError(_("Project with the same name already exists"))
+
     @api.onchange("team_lead_id")
     def _onchange_team_lead_id(self):
-        """
-        Link worker with TL
-        """
+        """Link worker with TL"""
         for record in self:
             record.worker_ids = [(4, record.team_lead_id.id)]
 
     @api.onchange("project_manager_id")
     def _onchange_project_manager_id(self):
-        """
-        Link worker with PM
-        """
+        """Link worker with PM"""
         for record in self:
             record.worker_ids = [(4, record.project_manager_id.id)]
 
     def action_to_tasks(self):
         """In tree view the server activity , action to tasks of only the selected projects"""
         action = {
-            "name": "Tasks",
+            "name": _("Tasks"),
             "view_mode": "kanban",
             "res_model": "task",
             "type": "ir.actions.act_window",
             "domain": [("project_id", "in", self.ids)]
         }
         return action
-
 
 
 class ProjectLine(models.Model):
