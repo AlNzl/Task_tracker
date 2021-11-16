@@ -10,13 +10,14 @@ class Task(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def _get_default_stage_id(self):
+        """Get default stage id"""
         stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         return stage_id
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
     ba_time = fields.Float(string="BA time")
-    total_time = fields.Float(string="Total time", compute="_compute_total_time")
+    total_time = fields.Float(string="Total time", compute="_compute_total_time", store=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
 
     stage_id = fields.Many2one(comodel_name="stage", string="Stage", default=_get_default_stage_id,
@@ -32,10 +33,20 @@ class Task(models.Model):
                                             string="Time tracker")
     timer = fields.Datetime(string="Timer")
 
+    task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
+
+    def _compute_task_progress(self):
+        """Calculates the percentage of completion of the task"""
+        for record in self:
+            try:
+                record.task_progress = sum(record.time_tracker_line_ids.mapped("time")) * 100 / record.total_time
+            except ZeroDivisionError:
+                pass
+            if record.task_progress >= 100:
+                record.task_progress = 100
+
     def create_stage_dct(self):
-        """
-        Create dict with stages
-        """
+        """Create dict with stages"""
         back = self.env.ref("Task_tracker.task_stage_backlog").id
         ready = self.env.ref("Task_tracker.task_stage_ready").id
         progress = self.env.ref("Task_tracker.task_stage_progress").id
@@ -54,9 +65,7 @@ class Task(models.Model):
 
     @api.model
     def change_stage(self):
-        """
-        Change stage on tree view if currents stages the same
-        """
+        """Change stage on tree view if currents stages the same"""
         stage_dct = self.create_stage_dct()
         acceptance_criteria = [len(self.stage_id) == 1,
                                self.stage_id.id in stage_dct,
@@ -70,45 +79,28 @@ class Task(models.Model):
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
-        """
-        Group stage_ids default
-        """
+        """Group stage_ids default"""
         stage_ids = self.env["stage"].search([])
         return stage_ids
 
     @api.onchange("project_id")
     def _onchange_project_id(self):
-        """
-        Inserts a value from team_lead_id to responsible_id
-        """
+        """Inserts a value from team_lead_id to responsible_id"""
         for record in self:
             record.responsible_id = record.project_id.team_lead_id.id
 
+    @api.depends("ba_time", "worker_id.employee_coefficient")
     def _compute_total_time(self):
-        """
-        Calculates total time
-        """
+        """Calculates total time"""
         for record in self:
             record.total_time = record.ba_time * record.worker_id.employee_coefficient
 
     @api.constrains("stage_id")
     def check_stage(self):
-        """
-        Here we check the stage, if it is in 'In progress', we start the timer
-        """
+        """Here we check the stage, if it is in 'In progress', we start the timer"""
         if self.stage_id.id == self.env.ref("Task_tracker.task_stage_progress").id:
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
             self.timer = timer
-
-    def write(self, vals):
-        """
-        If datetime now < timer, we are not allowed to change
-        """
-        if self.timer < datetime.now():
-            raise UserError(_("You can no longer change Time tracker"))
-        if not self.timer or self.timer > datetime.now():
-            res = super(Task, self).write(vals)
-            return res
 
 
 class TimeTrackerLine(models.Model):

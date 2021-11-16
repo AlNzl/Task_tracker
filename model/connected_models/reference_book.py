@@ -12,8 +12,6 @@ class ReferenceBook(models.Model):
 
     @api.onchange("name")
     def _onchange_name(self):
-        """
-        When creating a duplicate calls UserError
-        """
+        """When creating a duplicate calls UserError"""
         if self.env["reference.book"].search([("name", "=", self.name)]):
             raise UserError(_("%s already exists!!!" % (self.name)))

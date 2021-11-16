@@ -170,8 +170,8 @@
                 <field name="project_manager_id"/>
                 <field name="task_ids"/>
                 <group expand="1" string="Group By">
-                    <filter string="Team Lead" name="group_id" context="{'group_by':'team_lead_id'}"/>
-                    <filter string="Project Manager" name="country_id" context="{'group_by':'project_manager_id'}"/>
+                    <filter string="Team Lead" name="team_lead_id" context="{'group_by':'team_lead_id'}"/>
+                    <filter string="Project Manager" name="project_manager_id" context="{'group_by':'project_manager_id'}"/>
                 </group>
             </search>
         </field>
