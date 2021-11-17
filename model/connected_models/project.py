@@ -33,7 +33,7 @@ class Project(models.Model):
     def _compute_count(self):
         """Counts the number of tasks in the project"""
         for record in self:
-            record.task_count = self.env["task"].search_count([("worker_id", "=", self.id)])
+            record.task_count = self.env["task"].search_count([("project_id", "=", self.id)])
 
     @api.onchange("name")
     def _onchange_name(self):
