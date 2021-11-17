@@ -73,11 +73,10 @@ class ProjectLine(models.Model):
     def _onchange_employee_id(self):
         """Does not add the employee to the project.line if it already exists"""
         for record in self:
-            employees = record.project_id.project_line_ids.employee_id
-            employee_ids = [id.id for id in employees]
+            employee_ids = record.project_id.project_line_ids.employee_id.ids
             return {"domain": {"employee_id": [("id", "not in", employee_ids)]}}
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
-    position_id = fields.Char(related="employee_id.position_ids.name")
+    position_id = fields.Char(related="employee_id.position_ids.name", string="Profession")
     sold = fields.Float(string="Sold")
     project_id = fields.Many2one(comodel_name="project", string="Project")

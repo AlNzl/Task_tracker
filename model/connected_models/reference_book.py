@@ -17,10 +17,10 @@ class ReferenceBook(models.Model):
             raise UserError(_("%s already exists!!!" % self.name))
 
     @api.constrains("employee_ids")
-    def _pass_tl_to_developer(self):
+    def _constrains_employee_ids(self):
         """When adding a team lead, pass it to developers """
-        if self.name == self.env.ref("Task_tracker.reference_book_team_lead").name:
-            team_leads = self.env["hr.employee"].search(
-                [("position_ids", "=", self.env.ref("Task_tracker.reference_book_team_lead").name)])
-            for team_lead in team_leads:
-                team_lead.position_ids = [(4, self.env.ref("Task_tracker.reference_book_developer").id)]
+        tl_id = self.env.ref("Task_tracker.reference_book_team_lead").id
+        if self.id == tl_id:
+            team_lead_ids = self.env["hr.employee"].search([("position_ids", "=", tl_id)])
+            for team_lead_id in team_lead_ids:
+                team_lead_id.position_ids = [(4, self.env.ref("Task_tracker.reference_book_developer").id)]
