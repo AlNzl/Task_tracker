@@ -126,7 +126,7 @@ class Task(models.Model):
             self.responsible_id = self.project_id.team_lead_id.id
 
     def check_stages(self, vals, method_name):
-        """Check if it is possible to create and edit the model"""
+        """Method check stage model"""
         bl_stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         ready_stage_id = self.env.ref("Task_tracker.task_stage_ready").id
         check_timer_id = not self.timer or self.timer > datetime.now()
@@ -139,12 +139,10 @@ class Task(models.Model):
             check_stage = vals.get("stage_id") == bl_stage_id or vals.get("stage_id") == ready_stage_id
             check_info = vals.get("time_tracker_line_ids")
 
-        if not check_stage:
-            if not check_timer_id:
-                raise UserError(_("You can no longer change Time tracker"))
-        elif check_stage:
-            if check_info:
-                raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
+        if not check_stage and not check_timer_id:
+            raise UserError(_("You can no longer change Time tracker"))
+        elif check_stage and check_info:
+            raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
 
     @api.model
     def create(self, vals):
