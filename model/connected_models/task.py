@@ -142,7 +142,7 @@ class Task(models.Model):
         if not check_stage:
             if not check_timer_id:
                 raise UserError(_("You can no longer change Time tracker"))
-        else:
+        elif check_stage:
             if check_info:
                 raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
 
