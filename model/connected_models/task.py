@@ -126,7 +126,7 @@ class Task(models.Model):
             self.responsible_id = self.project_id.team_lead_id.id
 
     def check_stages(self, vals, method_name):
-        """Method check stage model"""
+        """Check stage and can create or write in Time tracker"""
         bl_stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         ready_stage_id = self.env.ref("Task_tracker.task_stage_ready").id
         check_timer_id = not self.timer or self.timer > datetime.now()
