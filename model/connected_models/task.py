@@ -125,6 +125,46 @@ class Task(models.Model):
         if origin_id == progress_id and current_id == review_id:
             self.responsible_id = self.project_id.team_lead_id.id
 
+    def check_stages(self, vals, method_name):
+        bl_stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
+        ready_stage_id = self.env.ref("Task_tracker.task_stage_ready").id
+
+        if method_name == "write":
+            check_stage = self.stage_id.id == bl_stage_id or self.stage_id.id == ready_stage_id
+
+        elif method_name == "create":
+            check_stage = vals.get("stage_id") == bl_stage_id or vals.get("stage_id") == ready_stage_id
+
+        if not check_stage:
+            if not self.timer or self.timer > datetime.now():
+                return True
+            else:
+                raise UserError(_("You can no longer change Time tracker"))
+        else:
+            if "time_tracker_line_ids" in vals:
+                raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
+            else:
+                return True
+
+    @api.model
+    def create(self, vals):
+        """
+        If datetime now < timer, we are not allowed to change
+        """
+        self.check_stages(vals, "create")
+        if self.check_stages:
+            res = super(Task, self).create(vals)
+            return res
+
+    def write(self, vals):
+        """
+        If datetime now < timer, we are not allowed to change
+        """
+        self.check_stages(vals, "write")
+        if self.check_stages:
+            res = super(Task, self).write(vals)
+            return res
+
 
 class TimeTrackerLine(models.Model):
     _name = "time.tracker.line"
