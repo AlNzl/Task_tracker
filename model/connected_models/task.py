@@ -16,7 +16,7 @@ class Task(models.Model):
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
-    time_left = fields.Float(string="Time left", compute="_compute_left_time", store=True)
+    time_left = fields.Float(string="Time left", compute="_compute_time_left", store=True)
     ba_time = fields.Float(string="BA time")
     total_time = fields.Float(string="Total time", compute="_compute_total_time", store=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
@@ -35,6 +35,18 @@ class Task(models.Model):
     timer = fields.Datetime(string="Timer")
 
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
+
+    @api.constrains("time_tracker_line_ids")
+    def _constrains_time_tracker_line_ids(self):
+        # task_id = self.id
+        # name = self.worker_id.name
+        # msg = f"{name}"
+        # print(task_id.message_post(body=msg))
+        task_ids = self.env["task"].search([])
+        for task_id in task_ids:
+            name = task_id.worker_id.name
+            msg = f"{name}"
+            print(task_id.message_post(body=msg))
 
     @api.depends("time_tracker_line_ids.time", "total_time")
     def _compute_time_left(self):
