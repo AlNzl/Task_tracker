@@ -146,16 +146,14 @@ class Task(models.Model):
 
     @api.model
     def create(self, vals):
-        """check in check_stages and if everything is ok create"""
+        """Check in check_stages and if everything is ok create"""
         self.check_stages(vals, "create")
-
         res = super(Task, self).create(vals)
         return res
 
     def write(self, vals):
-        """check in check_stages and if everything is ok write"""
+        """Check in check_stages and if everything is ok write"""
         self.check_stages(vals, "write")
-
         res = super(Task, self).write(vals)
         return res
 
