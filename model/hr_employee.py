@@ -1,10 +1,11 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    employee_coefficient = fields.Float(string="Employee coefficient")
+    employee_coefficient = fields.Float(string="Employee coefficient", help="Coefficient must more than 0 !")
     currency_id = fields.Many2one("res.currency", string="Currency")
     employee_hour = fields.Monetary(string="Employee hour")
 
@@ -13,4 +14,9 @@ class HrEmployee(models.Model):
 
     position_ids = fields.Many2many(comodel_name="reference.book", string="Job Position")
 
-
+    @api.constrains("employee_coefficient")
+    def _constrains_employee_coefficient(self):
+        """Checks coefficient for non-negativity"""
+        for record in self:
+            if record.employee_coefficient < 0:
+                raise ValidationError(_("Your coefficient '%s' less than 0" % record.employee_coefficient))
