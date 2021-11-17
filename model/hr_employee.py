@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 class HrEmployee(models.Model):
@@ -19,4 +19,4 @@ class HrEmployee(models.Model):
         """Checks coefficient for non-negativity"""
         for record in self:
             if record.employee_coefficient < 0:
-                raise ValidationError(_("Your coefficient '%s' less than 0" % record.employee_coefficient))
+                raise UserError(_("Your coefficient '%s' less than 0" % record.employee_coefficient))

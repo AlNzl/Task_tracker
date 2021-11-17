@@ -1,6 +1,5 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.exceptions import ValidationError
 
 AVAILABLE_PRIORITIES = [
     ("low", "Low"),
