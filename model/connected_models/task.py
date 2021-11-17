@@ -37,7 +37,7 @@ class Task(models.Model):
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
 
     @api.depends("time_tracker_line_ids.time", "total_time")
-    def _compute_time_left(self):
+    def _compute_left_time(self):
         """Calculates how much time left to complete the task"""
         for record in self:
             record.time_left = record.total_time - sum(record.time_tracker_line_ids.mapped("time"))
@@ -75,13 +75,11 @@ class Task(models.Model):
     def change_stage(self):
         """Change stage on tree view if currents stages the same"""
         stage_dct = self.create_stage_dct()
-        acceptance_criteria = [len(self.stage_id) == 1,
-                               self.stage_id.id in stage_dct,
-                               self.stage_id.id != self.env.ref("Task_tracker.task_stage_done").id
-                               ]
-        if all(acceptance_criteria):
+        task_done_id = self.env.ref("Task_tracker.task_stage_done").id
+        if len(self.stage_id) == 1 and self.stage_id.id in stage_dct and self.stage_id.id != task_done_id:
             stage_id = stage_dct[self.stage_id.id]["next"]
-            self.env["task"].browse(self._context.get("active_ids")).update({"stage_id": stage_id})
+            for record in self:
+                record.stage_id = stage_id
         else:
             raise UserError(_("The stage can't be changed."))
 

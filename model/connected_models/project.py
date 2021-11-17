@@ -82,3 +82,4 @@ class ProjectLine(models.Model):
     position = fields.Char(related="employee_id.position_ids.name", string="Profession")
     sold = fields.Float(string="Sold")
     project_id = fields.Many2one(comodel_name="project", string="Project")
+
