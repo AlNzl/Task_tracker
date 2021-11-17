@@ -38,15 +38,11 @@ class Task(models.Model):
 
     @api.constrains("time_tracker_line_ids")
     def _constrains_time_tracker_line_ids(self):
-        # task_id = self.id
-        # name = self.worker_id.name
-        # msg = f"{name}"
-        # print(task_id.message_post(body=msg))
-        task_ids = self.env["task"].search([])
-        for task_id in task_ids:
-            name = task_id.worker_id.name
-            msg = f"{name}"
-            print(task_id.message_post(body=msg))
+        """When add new worker, hiw name pass to chatter"""
+        worker_ids = self.time_tracker_line_ids.worker_id
+        for worker_id in worker_ids:
+            msg = f"New worker: {worker_id.name}"
+        self.message_post(body=msg)
 
     @api.depends("time_tracker_line_ids.time", "total_time")
     def _compute_time_left(self):

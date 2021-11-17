@@ -60,8 +60,8 @@
                     </div>
                     <group>
                         <group>
-                            <field name="team_lead_id"/>
-                            <field name="project_manager_id"/>
+                            <field name="team_lead_id" widget="selection"/>
+                            <field name="project_manager_id" widget="selection"/>
                         </group>
                         <group>
 
