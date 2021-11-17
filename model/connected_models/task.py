@@ -16,6 +16,7 @@ class Task(models.Model):
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
+    time_left = fields.Float(string="Time left", compute="_compute_left_time")
     ba_time = fields.Float(string="BA time")
     total_time = fields.Float(string="Total time", compute="_compute_total_time", store=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
@@ -34,6 +35,13 @@ class Task(models.Model):
     timer = fields.Datetime(string="Timer")
 
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
+
+    def _compute_left_time(self):
+        for record in self:
+            line_ids = record.time_tracker_line_ids
+            for line in line_ids:
+                record.time_left -= line.time
+            record.time_left += record.total_time
 
     def _compute_task_progress(self):
         """Calculates the percentage of completion of the task"""

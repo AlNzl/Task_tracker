@@ -50,6 +50,9 @@
                                     <field name="time" widget="float_time"/>
                                 </tree>
                             </field>
+                            <header>
+                                <field name="time_left" widget="float_time"/>
+                            </header>
                         </page>
                     </notebook>
                 </sheet>
@@ -105,7 +108,7 @@
                                         <field name="responsible_id"/>
                                     </li>
                                     <li invisible="1">Stage:
-                                        <field name="stage_id" />
+                                        <field name="stage_id"/>
                                     </li>
                                     <li>Project:
                                         <field name="project_id"/>
