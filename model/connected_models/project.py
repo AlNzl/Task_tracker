@@ -77,6 +77,6 @@ class ProjectLine(models.Model):
             return {"domain": {"employee_id": [("id", "not in", employee_ids)]}}
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
-    position_id = fields.Char(related="employee_id.position_ids.name", string="Profession")
+    position = fields.Char(related="employee_id.position_ids.name", string="Profession")
     sold = fields.Float(string="Sold")
     project_id = fields.Many2one(comodel_name="project", string="Project")
