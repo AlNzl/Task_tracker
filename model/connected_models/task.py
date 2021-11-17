@@ -97,6 +97,13 @@ class Task(models.Model):
             timer = datetime.now() + timedelta(hours=self.total_time, days=1)
             self.timer = timer
 
+    @api.constrains("stage_id")
+    def _constrains_stage_id(self):
+        """Here we check the stage, if it is in 'Review', pass Team Lead in responsible_id"""
+        for record in self:
+            if record.stage_id.id == self.env.ref("Task_tracker.task_stage_review").id:
+                record.responsible_id = record.project_id.team_lead_id.id
+
     @api.onchange("stage_id")
     def _onchange_stage_id(self):
         """Changing stage only to next or previous"""

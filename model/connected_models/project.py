@@ -20,7 +20,9 @@ class Project(models.Model):
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
     worker_ids = fields.Many2many(comodel_name="hr.employee", string="Team")
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
-                                   domain=lambda self: [("position_ids.id", "=", self.env.ref("Task_tracker.reference_book_team_lead").id)], required="True")
+                                   domain=lambda self: [("position_ids.id", "=",
+                                                         self.env.ref("Task_tracker.reference_book_team_lead").id)],
+                                   required="True")
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
                                          domain=lambda self: [("position_ids.id", "=", self.env.ref(
                                              "Task_tracker.reference_book_project_manager").id)])
@@ -67,6 +69,14 @@ class ProjectLine(models.Model):
     _name = "project.line"
     _description = "Project Line"
 
+    @api.onchange("employee_id")
+    def _onchange_employee_id(self):
+        """Does not add the employee to the project.line if it already exists"""
+        for record in self:
+            employee_ids = record.project_id.project_line_ids.employee_id.ids
+            return {"domain": {"employee_id": [("id", "not in", employee_ids)]}}
+
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
+    position = fields.Char(related="employee_id.position_ids.name", string="Profession")
     sold = fields.Float(string="Sold")
     project_id = fields.Many2one(comodel_name="project", string="Project")
