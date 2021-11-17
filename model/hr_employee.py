@@ -20,3 +20,4 @@ class HrEmployee(models.Model):
         for record in self:
             if record.employee_coefficient < 0:
                 raise UserError(_("Your coefficient '%s' less than 0" % record.employee_coefficient))
+
