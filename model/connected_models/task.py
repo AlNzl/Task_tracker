@@ -148,14 +148,14 @@ class Task(models.Model):
 
     @api.model
     def create(self, vals):
-        """If datetime now < timer, we are not allowed to change"""
+        """check in check_stages and if everything is ok create"""
         self.check_stages(vals, "create")
 
         res = super(Task, self).create(vals)
         return res
 
     def write(self, vals):
-        """If datetime now < timer, we are not allowed to change"""
+        """check in check_stages and if everything is ok write"""
         self.check_stages(vals, "write")
 
         res = super(Task, self).write(vals)
