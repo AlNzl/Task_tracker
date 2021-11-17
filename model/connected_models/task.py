@@ -131,9 +131,11 @@ class Task(models.Model):
 
         if method_name == "write":
             check_stage = self.stage_id.id == bl_stage_id or self.stage_id.id == ready_stage_id
+            check_info = "time_tracker_line_ids" in vals
 
         elif method_name == "create":
             check_stage = vals.get("stage_id") == bl_stage_id or vals.get("stage_id") == ready_stage_id
+            check_info = vals.get("time_tracker_line_ids")
 
         if not check_stage:
             if not self.timer or self.timer > datetime.now():
@@ -141,7 +143,7 @@ class Task(models.Model):
             else:
                 raise UserError(_("You can no longer change Time tracker"))
         else:
-            if "time_tracker_line_ids" in vals:
+            if check_info:
                 raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
             else:
                 return True
@@ -152,18 +154,18 @@ class Task(models.Model):
         If datetime now < timer, we are not allowed to change
         """
         self.check_stages(vals, "create")
-        if self.check_stages:
-            res = super(Task, self).create(vals)
-            return res
+
+        res = super(Task, self).create(vals)
+        return res
 
     def write(self, vals):
         """
         If datetime now < timer, we are not allowed to change
         """
         self.check_stages(vals, "write")
-        if self.check_stages:
-            res = super(Task, self).write(vals)
-            return res
+
+        res = super(Task, self).write(vals)
+        return res
 
 
 class TimeTrackerLine(models.Model):
