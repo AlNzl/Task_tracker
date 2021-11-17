@@ -74,10 +74,9 @@ class ProjectLine(models.Model):
         """Does not add the employee to the project.line if it already exists"""
         for record in self:
             employee_ids = record.project_id.project_line_ids.employee_id.ids
-            tl_id = record.project_id.team_lead_id.id
-            pm_id = record.project_id.project_manager_id.id
+            employee_ids.extend([record.project_id.team_lead_id.id, record.project_id.project_manager_id.id])
             return {"domain": {
-                "employee_id": ["&", "&", ("id", "not in", employee_ids), ("id", "!=", tl_id), ("id", "!=", pm_id)]}}
+                "employee_id": [("id", "not in", employee_ids)]}}
 
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Employee")
     position = fields.Char(related="employee_id.position_ids.name", string="Profession")
