@@ -36,7 +36,7 @@ class Task(models.Model):
 
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
 
-    @api.depends("time, total_time")
+    @api.depends("time_tracker_line_ids.time, total_time")
     def _compute_time_left(self):
         """Calculates how much time left to complete the task"""
         for record in self:
