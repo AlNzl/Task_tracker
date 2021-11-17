@@ -126,8 +126,10 @@ class Task(models.Model):
             self.responsible_id = self.project_id.team_lead_id.id
 
     def check_stages(self, vals, method_name):
+        """Check if it is possible to create and edit the model"""
         bl_stage_id = self.env.ref("Task_tracker.task_stage_backlog").id
         ready_stage_id = self.env.ref("Task_tracker.task_stage_ready").id
+        check_timer_id = not self.timer or self.timer > datetime.now()
 
         if method_name == "write":
             check_stage = self.stage_id.id == bl_stage_id or self.stage_id.id == ready_stage_id
@@ -138,30 +140,22 @@ class Task(models.Model):
             check_info = vals.get("time_tracker_line_ids")
 
         if not check_stage:
-            if not self.timer or self.timer > datetime.now():
-                return True
-            else:
+            if not check_timer_id:
                 raise UserError(_("You can no longer change Time tracker"))
         else:
             if check_info:
                 raise UserError(_("You can edit Time tracker only after stage 'Ready'"))
-            else:
-                return True
 
     @api.model
     def create(self, vals):
-        """
-        If datetime now < timer, we are not allowed to change
-        """
+        """If datetime now < timer, we are not allowed to change"""
         self.check_stages(vals, "create")
 
         res = super(Task, self).create(vals)
         return res
 
     def write(self, vals):
-        """
-        If datetime now < timer, we are not allowed to change
-        """
+        """If datetime now < timer, we are not allowed to change"""
         self.check_stages(vals, "write")
 
         res = super(Task, self).write(vals)
