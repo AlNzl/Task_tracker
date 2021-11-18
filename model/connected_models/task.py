@@ -183,7 +183,7 @@ class TimeTrackerLine(models.Model):
             for date in dates:
                 if date == record.date:
                     record.work_time_day = sum(
-                        time_tracker.filtered(lambda time_track: time_track.worker_id.id == record.worker_id.id and date == record.date).mapped(
+                        time_tracker.filtered(lambda time_track: time_track.worker_id.id == record.worker_id.id and time_track.date == record.date).mapped(
                             "time"))
 
                     if record.work_time_day > 10:
