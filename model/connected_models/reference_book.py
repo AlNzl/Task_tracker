@@ -7,13 +7,13 @@ class ReferenceBook(models.Model):
     _description = "Reference Book"
 
     name = fields.Char(string="Profession", required=True)
-    employee_ids_group = fields.Char(string="Name", compute="_get_employee_name", store=True)
+    employee_ids_group = fields.Char(string="Name", compute="compute_employee_name", store=True)
 
     employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
 
     @api.depends("employee_ids")
-    def _get_employee_name(self):
-        """Get name from Many2many and add to M2M_name"""
+    def compute_employee_name(self):
+        """Get name from employee_ids and add to employee_ids_group"""
         for record in self:
             if record.employee_ids:
                 tag_group = ",".join([p.name for p in record.employee_ids])
