@@ -1,0 +1,8 @@
+.o_progressbar .o_progressbar_complete.o_progress_red {
+  background-color: #FF0000;
+  height: 100%;
+}
+.o_progressbar .o_progressbar_complete.o_progress_green {
+  background-color: #008000;
+  height: 100%;
+}

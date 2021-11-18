@@ -1,0 +1,8 @@
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend" name="Progress bar">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/Task_tracker/static/src/css/progress_bar_color.css"/>
+            <script type="text/javascript" src="/Task_tracker/static/src/js/progress_bar_color.js"/>
+        </xpath>
+    </template>
+</odoo>
