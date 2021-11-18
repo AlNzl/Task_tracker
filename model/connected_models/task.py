@@ -42,7 +42,7 @@ class Task(models.Model):
             record.employees_salary = sum(record.time_tracker_line_ids.mapped("salary"))
 
     @api.depends("time_tracker_line_ids.time", "total_time")
-    def _compute_left_time(self):
+    def _compute_time_left(self):
         """Calculates how much time left to complete the task"""
         for record in self:
             record.time_left = record.total_time - sum(record.time_tracker_line_ids.mapped("time"))
@@ -192,4 +192,3 @@ class TimeTrackerLine(models.Model):
         msg = _("New worker: %s" % res.worker_id.name)
         res.task_id.message_post(body=msg)
         return res
-
