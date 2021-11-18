@@ -64,9 +64,9 @@
                             <field name="project_manager_id" widget="selection"/>
                         </group>
                         <group>
-
-                            <field name="currency_id"/>
                             <field name="total_price"/>
+                            <field name="currency_id"/>
+                            <field name ="project_profit"/>
                         </group>
                         <group>
                             <field name="time" widget="float_time"/>

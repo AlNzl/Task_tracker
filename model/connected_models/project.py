@@ -28,7 +28,15 @@ class Project(models.Model):
                                              "Task_tracker.reference_book_project_manager").id)])
     task_ids = fields.One2many(comodel_name="task", inverse_name="project_id", string="Tasks")
     project_line_ids = fields.One2many(comodel_name="project.line", inverse_name="project_id", string="Workers")
+
     task_count = fields.Integer(string="Number of task", compute="_compute_count")
+    project_profit = fields.Float(string="Profit for project", compute="_compute_project_profit", store=True)
+
+    @api.depends("total_price", "task_ids.time_tracker_line_ids")
+    def _compute_project_profit(self):
+        """Count the project profit"""
+        for record in self:
+            record.project_profit = record.total_price - sum(record.task_ids.mapped("employees_salary"))
 
     def _compute_count(self):
         """Counts the number of tasks in the project"""

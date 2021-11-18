@@ -33,8 +33,13 @@ class Task(models.Model):
     time_tracker_line_ids = fields.One2many(comodel_name="time.tracker.line", inverse_name="task_id",
                                             string="Time tracker")
     timer = fields.Datetime(string="Timer")
-
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
+    employees_salary = fields.Float(string="Employees salary", compute="_compute_employees_salary")
+
+    def _compute_employees_salary(self):
+        """Count the employees salary"""
+        for record in self:
+            record.employees_salary = sum(record.time_tracker_line_ids.mapped("salary"))
 
     @api.depends("time_tracker_line_ids.time", "total_time")
     def _compute_left_time(self):
@@ -172,6 +177,13 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
+
+    salary = fields.Float(string="Price", compute="_compute_salary")
+
+    def _compute_salary(self):
+        """Count worker salary"""
+        for record in self:
+            record.salary = record.worker_id.employee_hour * record.time
 
     @api.model
     def create(self, vals):
