@@ -7,9 +7,19 @@ class ReferenceBook(models.Model):
     _description = "Reference Book"
 
     name = fields.Char(string="Profession", required=True)
-    M2M_name = fields.Char(related="employee_ids.name", string="Name", store=True)
+    employee_ids_group = fields.Char(string="Name", compute="_get_employee_name", store=True)
 
     employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
+
+    @api.depends("employee_ids")
+    def _get_employee_name(self):
+        """Get name from Many2many and add to M2M_name"""
+        for record in self:
+            if record.employee_ids:
+                tag_group = ",".join([p.name for p in record.employee_ids])
+            else:
+                tag_group = ""
+            record.employee_ids_group = tag_group
 
     @api.onchange("name")
     def _onchange_name(self):
