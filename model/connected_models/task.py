@@ -16,7 +16,7 @@ class Task(models.Model):
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
-    time_left = fields.Float(string="Time left", compute="_compute_time_left", store=True)
+    time_left = fields.Float(string="Time left", compute="_compute_left_time", store=True)
     ba_time = fields.Float(string="BA time")
     total_time = fields.Float(string="Total time", compute="_compute_total_time", store=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")

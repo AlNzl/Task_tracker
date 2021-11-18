@@ -7,6 +7,7 @@ class ReferenceBook(models.Model):
     _description = "Reference Book"
 
     name = fields.Char(string="Profession", required=True)
+    M2M_name = fields.Char(related="employee_ids.name", string="Name", store=True)
 
     employee_ids = fields.Many2many(comodel_name="hr.employee", string="Employees")
 
