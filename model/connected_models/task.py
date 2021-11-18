@@ -172,3 +172,32 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
+    work_time_day = fields.Float(string="Pizda", compute="_compute_work_time_day", store=True)
+
+    @api.onchange("time")
+    def _compute_work_time_day(self):
+        for record in self:
+            time_tracker = self.env["time.tracker.line"].search([])
+            dates = time_tracker.mapped("date")
+            """Если дни не повторяются"""
+            for date in dates:
+                if date == record.date:
+                    record.work_time_day = sum(
+                        time_tracker.filtered(lambda time_track: time_track.worker_id.id == record.worker_id.id and date == record.date).mapped(
+                            "time"))
+
+                    if record.work_time_day > 10:
+                        raise UserError(_("You can no work more than 10 hours in day"))
+            # for date in dates:
+            #     if date == record.date:
+            #         print("Mu v true")
+            #         record.work_time_day = sum(time_tracker.filtered(lambda time_track: time_track.worker_id.id == record.worker_id.id and date == record.date).mapped("time"))
+            #         day = time_tracker.filtered(lambda time_track: time_track.worker_id.id == record.worker_id.id and date == record.date).mapped("time")
+            #         print(f"Все даты: {dates}")
+            #         print(f"Все часы воркера не зависимо от даты: {day}")
+            #         print(f"Проверка в тайм трекере : {date}")
+            #         print(f"Дата которую  ввели: {record.date}")
+            #         print(record.work_time_day)
+            #
+            #         if record.work_time_day > 10:
+            #             raise UserError(_("You can no work more than 10 hours in day"))
