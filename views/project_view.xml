@@ -3,7 +3,7 @@
 
 
     <record id="action_update_date_projects" model="ir.actions.server">
-        <field name="name">Go to tasks</field>
+        <field name="name">Action to tasks</field>
         <field name="model_id" ref="model_project"/>
         <field name="binding_model_id" ref="model_project"/>
         <field name="state">code</field>
@@ -79,6 +79,7 @@
                                 <tree editable="bottom">
                                     <field name="employee_id"/>
                                     <field name="position"/>
+                                    <field name="employee_profit"/>
                                     <field name="sold"/>
                                 </tree>
                             </field>

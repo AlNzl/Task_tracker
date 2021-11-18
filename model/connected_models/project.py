@@ -22,7 +22,7 @@ class Project(models.Model):
     team_lead_id = fields.Many2one(comodel_name="hr.employee", string="Team Lead",
                                    domain=lambda self: [("position_ids.id", "=",
                                                          self.env.ref("Task_tracker.reference_book_team_lead").id)],
-                                   required="True")
+                                   required=True)
     project_manager_id = fields.Many2one(comodel_name="hr.employee", string="Project Manager",
                                          domain=lambda self: [("position_ids.id", "=", self.env.ref(
                                              "Task_tracker.reference_book_project_manager").id)])
@@ -82,6 +82,16 @@ class ProjectLine(models.Model):
     position = fields.Char(related="employee_id.position_ids.name", string="Profession")
     sold = fields.Float(string="Sold")
     project_id = fields.Many2one(comodel_name="project", string="Project")
+
+    employee_profit = fields.Float(string="Profit", compute="_compute_total_profit", store=True)
+
+    @api.depends("employee_id.time_tracker_line_ids.time")
+    def _compute_total_profit(self):
+        """Compute total profit for project from employee"""
+        for record in self:
+            person_time = sum(record.employee_id.time_tracker_line_ids.mapped("time"))
+            task_time = record.employee_id.task_ids.total_time
+            record.employee_profit = record.sold * task_time - record.employee_id.employee_hour * person_time
 
     @api.constrains("sold")
     def _constrains_sold(self):
