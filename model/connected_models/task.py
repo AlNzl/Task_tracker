@@ -36,14 +36,6 @@ class Task(models.Model):
 
     task_progress = fields.Float(string="Progress", compute="_compute_task_progress")
 
-    @api.constrains("time_tracker_line_ids")
-    def _constrains_time_tracker_line_ids(self):
-        """When add new worker, hiw name pass to chatter"""
-        worker_ids = self.time_tracker_line_ids.worker_id
-        for worker_id in worker_ids:
-            msg = f"New worker: {worker_id.name}"
-        self.message_post(body=msg)
-
     @api.depends("time_tracker_line_ids.time", "total_time")
     def _compute_left_time(self):
         """Calculates how much time left to complete the task"""
@@ -180,3 +172,12 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
+
+    @api.model
+    def create(self, vals):
+        """When add new worker, hiw name pass to chatter"""
+        res = super(TimeTrackerLine, self).create(vals)
+        msg = _("New worker: %s" % res.worker_id.name)
+        res.task_id.message_post(body=msg)
+        return res
+
