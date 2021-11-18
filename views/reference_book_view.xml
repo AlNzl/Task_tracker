@@ -67,6 +67,9 @@
                 <group expand="1" string="Group By">
                     <filter string="Profession name" name="name" context="{'group_by':'name'}"/>
                 </group>
+                <group string="Group By">
+                    <filter string="Employees" name="employee_ids_group" context="{'group_by':'employee_ids_group'}"/>
+                </group>
             </search>
         </field>
     </record>
