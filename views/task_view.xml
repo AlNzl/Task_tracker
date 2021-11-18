@@ -31,7 +31,7 @@
                         <group>
                             <field name="project_id"/>
                             <field name="total_time" widget="float_time"/>
-                            <field name="stage_id"/>
+                            <field name="stage_id"  class="oe_read_only"/>
                         </group>
                         <group>
                             <field name="worker_id"/>

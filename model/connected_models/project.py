@@ -83,3 +83,9 @@ class ProjectLine(models.Model):
     sold = fields.Float(string="Sold")
     project_id = fields.Many2one(comodel_name="project", string="Project")
 
+    @api.constrains("sold")
+    def _constrains_sold(self):
+        """Checks sold for non-negativity"""
+        for record in self:
+            if record.sold < 0:
+                raise UserError(_("Selling price '%s' less than 0" % record.sold))

@@ -16,7 +16,7 @@ class Task(models.Model):
 
     name = fields.Char(string="Task name", required=True)
     description = fields.Text(string="Description")
-    time_left = fields.Float(string="Time left", compute="_compute_left_time", store=True)
+    time_left = fields.Float(string="Time left", compute="_compute_time_left", store=True)
     ba_time = fields.Float(string="BA time")
     total_time = fields.Float(string="Total time", compute="_compute_total_time", store=True)
     priority = fields.Selection(AVAILABLE_PRIORITIES, string="Priority")
@@ -172,3 +172,12 @@ class TimeTrackerLine(models.Model):
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     time = fields.Float(string="Time spent")
+
+    @api.model
+    def create(self, vals):
+        """When add new worker, hiw name pass to chatter"""
+        res = super(TimeTrackerLine, self).create(vals)
+        msg = _("New worker: %s" % res.worker_id.name)
+        res.task_id.message_post(body=msg)
+        return res
+
